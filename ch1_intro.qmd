@@ -1,0 +1,21 @@
+---
+title: "Ch 1 - Intro"
+jupyter: julia-1.9
+---
+
+Basically, Bayesian statistics involves taking some prior beliefs and combining them with data to produce an updated (posterior) set of beliefs. In statistics-world, these beliefs are encoded as distributions (or combinations of distributions).
+
+## Probability
+
+Bayesian and frequentist frameworks tend to differ on what "probability" means. In a Bayesian framework, probability refers to the plausibility of an event. And this tends to be how most people use the term "probability" in informal settings. If we say that the Chiefs have a 90% probability of winning a game vs the Broncos, we're probably using "probability" in the Bayesian sense.
+
+Frequentists, on the other hand, use probability to mean the relative frequency of a given event if it were repeated a lot of times. So in the above example, if this exact Chiefs team played this exact Broncos team in the same conditions 1,000 times, we'd expect them to win 900 of those games.
+
+## Testing Hypotheses
+
+In a Bayesian framework, we ask this question: In light of the observed data, what’s the chance that the hypothesis is correct?
+
+In a frequentist framework, we ask this question: If in fact the hypothesis is incorrect, what’s the chance I’d have observed this, or even more extreme, data?
+
+(note that both of the above are from [Ch 1 of Bayes Rules!](https://www.bayesrulesbook.com/chapter-1#thinking-like-a-bayesian))
+

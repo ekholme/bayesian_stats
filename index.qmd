@@ -1,0 +1,5 @@
+# Preface {.unnumbered}
+
+These are some personal notes on Bayesian statistics.
+
+The demos are mostly going to be in Julia, using the Turing.jl framework. But there may be other languages/frameworks used as well.

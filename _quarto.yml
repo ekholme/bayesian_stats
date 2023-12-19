@@ -1,0 +1,22 @@
+project:
+  type: book
+
+book:
+  title: "Notes on Bayesian Stats"
+  author: "Eric Ekholm"
+  date: "12/18/2023"
+  chapters:
+    - index.qmd
+    - ch1_intro.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+
+
