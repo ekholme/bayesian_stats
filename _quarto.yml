@@ -8,9 +8,6 @@ book:
   chapters:
     - index.qmd
     - ch1_intro.qmd
-    - references.qmd
-
-bibliography: references.bib
 
 format:
   html:

@@ -5,13 +5,13 @@ jupyter: julia-1.9
 
 Basically, Bayesian statistics involves taking some prior beliefs and combining them with data to produce an updated (posterior) set of beliefs. In statistics-world, these beliefs are encoded as distributions (or combinations of distributions).
 
-## Probability
+# Probability
 
 Bayesian and frequentist frameworks tend to differ on what "probability" means. In a Bayesian framework, probability refers to the plausibility of an event. And this tends to be how most people use the term "probability" in informal settings. If we say that the Chiefs have a 90% probability of winning a game vs the Broncos, we're probably using "probability" in the Bayesian sense.
 
 Frequentists, on the other hand, use probability to mean the relative frequency of a given event if it were repeated a lot of times. So in the above example, if this exact Chiefs team played this exact Broncos team in the same conditions 1,000 times, we'd expect them to win 900 of those games.
 
-## Testing Hypotheses
+# Testing Hypotheses
 
 In a Bayesian framework, we ask this question: In light of the observed data, what’s the chance that the hypothesis is correct?
 
@@ -19,3 +19,95 @@ In a frequentist framework, we ask this question: If in fact the hypothesis is i
 
 (note that both of the above are from [Ch 1 of Bayes Rules!](https://www.bayesrulesbook.com/chapter-1#thinking-like-a-bayesian))
 
+# Some Terminology
+
+*Unconditional probability*: $P(Y)$ -- the probability of X (e.g. the probability that an email is spam)
+
+*Conditional probability*: $P(Y|X)$ -- the probability of Y given X (e.g. the probability that an email is spam given that there's an exclamation mark in the subject line).
+
+In some cases, $P(Y|X) > P(Y)$, for example $P(orchestra | practice) > P(orchestra)$, but in other cases, $P(Y|X) < P(Y)$, for example $P(flu | wash hands) < P(flu)$
+
+Ordering is also important. Typically $P(Y|X) \neq P(X|Y)$.
+
+*Independence*: two events are independent if $P(Y|X) = P(Y)$.
+
+*Joint probability*: $P(Y \cap X)$ probabilty of Y **and** X. Assuming X is a binary variable, the total probability of observing Y is: $P(Y) = P(Y \cap X) + P(Y \cap X^c)$, where $X^c$ refers to "not X"
+
+## Probability vs Likelihood
+
+When B is known, the conditional probability function $P(\cdot|B)$ allows us to compare the probabilities of an unknown event, A or $A^c$, ocurring with B:
+
+$P(A|B)$ vs $P(A^c|B)$
+
+When A is known, the likelihood function $L(\cdot|A) = P(A|\cdot)$ allows us to evaluate the relative compatibility of data A with events B or $B^c$:
+
+$L(B|A)$ vs $L(B^c|A)$.
+
+## Calculating Joint probability
+
+$P(A|B) = \frac{P(A \cap B)}{P(B)}$
+
+# Bayes' Rule
+
+For events A and B, the posterior probability of B given A is:
+
+$P(B|A) = \frac{P(A \cap B)}{P(A)} = \frac{P(B)L(B|A)}{P(A)}$
+
+where
+
+$P(A) = P(B)L(B|A) + P(B^c)L(B^c|A)$
+
+or more generally:
+
+$posterior = \frac{prior \cdot likelihood}{normalizing constant}$
+
+# Worked example
+
+```{julia}
+using RDatasets
+using DataFrames
+using Statistics
+using Chain
+
+default = dataset("ISLR", "Default")
+
+#we'll just use default and student for this
+d = default[:, [:Default, :Student]]
+d.:Default .= d.:Default .== "Yes"
+d.:Student .= d.:Student .== "Yes"
+```
+
+let's look at the overall probability of default
+
+```{julia}
+mean(d.:Default)
+```
+
+and the overall probability of being a student
+
+```{julia}
+mean(d.:Student)
+```
+
+and the probability of default by student type
+
+```{julia}
+p_tbl = @chain d begin
+    groupby(:Student)
+    combine(:Default => mean)
+end
+```
+
+so, the likelihoods for student types are, $L(S|D) = .043$ and $L(S^c|D) = .029$
+
+If we want to figure out the probability of default for students, we can use:
+
+$P(S|D) = \frac{P(S)L(S|D)}{P(D)}$
+
+```{julia}
+p_s_d = (mean(d.:Student) * .043) / (mean(d.:Default))
+```
+
+So, given this, if we know someone defaults, there's a 38% probability that they're a student
+
+## RESUME HERE (AND AT 2.3 IN BAYES RULES BOOK)
