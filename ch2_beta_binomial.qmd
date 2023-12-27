@@ -1,0 +1,8 @@
+---
+title: "Ch 2 - The Beta Binomial Model"
+jupyter: julia-1.9
+---
+
+The beta-binomial model is a foundational model for Bayesian analysis.
+
+## RESUME AT BAYES RULES 3.1.1

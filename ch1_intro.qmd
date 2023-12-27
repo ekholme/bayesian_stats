@@ -43,6 +43,8 @@ When A is known, the likelihood function $L(\cdot|A) = P(A|\cdot)$ allows us to 
 
 $L(B|A)$ vs $L(B^c|A)$.
 
+For example, when Y = y is known, we can use a likelihood function ($L(\cdot |y) = f(y|\cdot)$) to compare the relative likelihood of observing data *y* under possible values of $\pi$ (in a binomial distribution), e.g. ($L(\pi_1 | y)$ vs $L(\pi_2 | y)$).
+
 ## Calculating Joint probability
 
 $P(A|B) = \frac{P(A \cap B)}{P(B)}$
@@ -60,6 +62,11 @@ $P(A) = P(B)L(B|A) + P(B^c)L(B^c|A)$
 or more generally:
 
 $posterior = \frac{prior \cdot likelihood}{normalizing constant}$
+
+Another way to think about this:
+
+$f(\pi | y) = \frac{f(\pi)L(\pi|y)}{f(y)}$
+
 
 # Worked example
 
@@ -105,9 +112,8 @@ If we want to figure out the probability of default for students, we can use:
 $P(S|D) = \frac{P(S)L(S|D)}{P(D)}$
 
 ```{julia}
-p_s_d = (mean(d.:Student) * .043) / (mean(d.:Default))
+p_s_d = (mean(d.:Student) * 0.043) / (mean(d.:Default))
 ```
 
 So, given this, if we know someone defaults, there's a 38% probability that they're a student
 
-## RESUME HERE (AND AT 2.3 IN BAYES RULES BOOK)

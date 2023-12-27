@@ -1,0 +1,14 @@
+---
+title: "Appendix - Distributions"
+jupyter: julia-1.9
+---
+
+This chapter describes some common distributions used in Bayesian models
+
+## Binomial Distribution
+
+Used when Y is a count outcome (e.g. the number of wins in a set of matches)
+
+$Y|\pi \sim Bin(n, \pi)$
+
+where $\pi$ is the probability of success in a given trial
