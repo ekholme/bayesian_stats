@@ -3,6 +3,140 @@ title: "Ch 2 - The Beta Binomial Model"
 jupyter: julia-1.9
 ---
 
-The beta-binomial model is a foundational model for Bayesian analysis.
+The beta-binomial model is a foundational model for Bayesian analysis. In this model, we assume the outcome follows a binomial distribution (n.b. that a Bernoulli distribution is just a special case of a binomial distribution) and that the prior distribution of $\pi$, the probability of an event occurring, follows a beta distribution.
 
-## RESUME AT BAYES RULES 3.1.1
+This type of model is useful for estimating, for example, the probability that a candidate will win an election, the proportion of people who drink beer, etc.
+
+## Beta Distribution
+
+The beta distribution is parameterized by $\alpha, \beta > 0$. If a random variable, X, is beta-distributed, we can notate it like so:
+
+$X \sim Beta(\alpha, \beta)$
+
+The beta distribution can approximate a Normal distribution when $\alpha \sim \beta$ and $\alpha$ and $\beta$ >> 1.
+
+For example
+
+```{julia}
+using Distributions
+using Plots
+using Random
+using StatsPlots
+
+d = Beta(4, 4) #alpha = 4, beta = 4
+x = 0:.01:1
+
+y = pdf.(d, x)
+```
+
+```{julia}
+plot(x, y, label="Beta(4, 4)")
+```
+
+but the distribution obviously doesn't have to look like this. We can change the shape by changing alpha and beta
+
+```{julia}
+d2 = Beta(1.5, 4)
+
+y2 = pdf.(d2, x)
+
+plot!(x, y2, label = "Beta(1.5, 4)")
+```
+
+and again
+
+```{julia}
+d3 = Beta(4, 1.5)
+
+y3 = pdf.(d3, x)
+
+plot!(x, y3, label = "Beta(4, 1.5)")
+```
+
+
+One of the important things to remember, here, though, is that $0 \le x \le 1$
+
+We can also make the beta distribution approximate the uniform distribution if $\alpha = \beta = 1$
+
+```{julia}
+d4 = Beta(1, 1)
+
+y4 = pdf.(d4, x)
+
+plot!(x, y4, label = "Beta(1,1)")
+```
+
+The flexibility of the beta distribution can make it useful.
+
+## Binomial Distribution
+
+The binomial distribution is used when Y is a count outcome (e.g. the number of wins in a set of matches). Proportion outcomes are just rescaled count outcomes, so this distribution applies to proportions as well.
+
+$Y|\pi \sim Bin(n, \pi)$
+
+where $\pi$ is the probability of success in a given trial.
+
+We can plot this as well
+
+```{julia}
+b = Binomial(100, .5) # 100 trials with π = .5
+
+x_bin = 0:1:100
+
+y_bin = pdf.(b, x_bin)
+
+plot(x_bin, y_bin, label="Bin(100, .5)")
+```
+
+## The Beta-Binomial Model
+
+The components above are sufficient to describe our Beta-Binomial model:
+
+$Y|\pi \sim Bin(n, \pi)$
+$\pi \sim Beta(\alpha, \beta)$
+
+## Simulate the Beta-Binomial model
+
+Let's say we want to predict the proportion of people who support Michelle in an election (basically the probability that she'll win). We can simulate some data by sampling from the beta and binomial distributions.
+
+Let's start by setting up a prior for our values of $\pi$. If we assume that our Beta distribution is parameterized as Beta(45, 55), we can simulate 1,000 values of $\pi$ from this distribution.
+
+```{julia}
+Random.seed!(0408)
+
+α = 45
+β = 55
+
+d = Beta(α, β)
+
+n = 1_000 # sample 1k values
+
+pi_sim = rand(d, n)
+
+#plot the distribution of pi values
+density(pi_sim)
+```
+
+
+Then, for each of these 1,000 values of $\pi$ we've simulated, let's assume we poll 100 people, and the proportion of people who support Michelle follows a Binomial distribution such that Binomial(100, $\pi$). We'll draw one sample from each Binomial distribution (i.e. each value of $\pi$), and then we can plot the distribution of our posterior.
+
+```{julia}
+#simulate y
+y_sim = vcat(rand.(Binomial.(100, pi_sim), 1)...)
+
+density(y_sim)
+```
+
+This will show us, roughly, how many people (out of 100) we can expect to support Michelle.
+
+As a further step, let's assume our data suggested that the "true" value of y is 50 -- i.e. that we conducted a poll and 50 (out of 100) people suggested they'd vote for Michelle. We can see the distribution of $\pi$ parameter values that produced these outcomes.
+
+```{julia}
+inds = findall(x -> x .== 50, y_sim)
+
+pi_50 = pi_sim[inds]
+
+density(pi_50)
+```
+
+This would probably be better if we had more values in our sample, but we get the point.
