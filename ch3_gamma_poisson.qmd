@@ -1,0 +1,70 @@
+---
+title: "Ch 3 - The Gamma-Poisson Model"
+jupyter: julia-1.9
+---
+
+Another foundational Bayesian model is the Gamma-Poisson model. Imagine we have a count outcome (e.g. the number of phone calls you receive in a day). The Poisson distribution is useful for modeling count data, and it depends on $\lambda$, the rate parameter, such that:
+
+$Y|\lambda \sim Pois(\lambda)$
+
+Let's plot what this distribution looks like with different rate parameters:
+
+```{julia}
+using Distributions
+using Plots
+using StatsPlots
+
+lambdas = 1:5
+
+plots = []
+for λ in lambdas
+    d = rand(Poisson(λ), 1_000)
+    p = plot(histogram(d), title="λ = $λ")
+    push!(plots, p)
+end
+
+plot!(plots..., legend=false)
+xlims!(0, 10)
+```
+
+## Gamma Distribution
+
+The Gamma Distribution will serve as our prior for $\lambda$. We can notate this via:
+
+$\lambda \sim Gamme(s, r)$
+
+The Gamma Distribution is parameterized by a shape parameter (s) and a rate parameter (r). These have the constraint that s, r > 0.
+
+Note that the Exponential Distribution is a special case of the Gamma Distribution where s = 1.
+
+In general, these distributions are positive and right-skewed (see this [figure](https://www.bayesrulesbook.com/chapter-5#fig:gamma-tuning), for example).
+
+To set an informative prior, we need to choose reasonable values of s and r. If we assume that we receive 5 phone calls in a day, we can estimate s and r using the equation $E(\lambda) = \frac{s}{r} \approx 5$, so we know that $s = 5r$. We can then plot some distributions that satisfy this and choose some values.
+
+Note that the Distributions.jl package parameterizes the Gamma distribution with shape (s, $\alpha$) and a scale parameter ($\theta$), which is the inverse of the rate (r, $\beta$) parameter (i.e. $\beta = 1 / \theta$)
+
+```{julia}
+r = 1:4
+θ = 1 ./ r
+s = 5 .* r
+
+gammas = Gamma.(s, θ)
+
+plots = []
+for Γ in gammas
+    α = Γ.α
+    θ = round(Γ.θ, digits=2)
+    y = rand(Γ, 10_000)
+    p = density(y, label="α = $α; θ = $θ")
+    push!(plots, p)
+end
+
+plot!(plots...)
+```
+
+## The Gamma-Poisson Model
+
+Given the above, the Gamma-Poisson model is described as:
+
+$Y_i|\lambda \sim Pois(\lambda)$
+$\lambda \sim Gamma(s, r)$
