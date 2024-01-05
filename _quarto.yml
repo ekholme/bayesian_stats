@@ -9,12 +9,13 @@ book:
     - index.qmd
     - ch1_intro.qmd
     - ch2_beta_binomial.qmd
+    - ch3_gamma_poisson.qmd
+    - ch4_posterior_simulation.qmd
+    - distributions.qmd
 
 format:
   html:
     theme: cosmo
-  pdf:
-    documentclass: scrreprt
 
 
 

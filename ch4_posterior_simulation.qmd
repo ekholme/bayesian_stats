@@ -2,3 +2,173 @@
 title: "Ch 4 - Posterior Simulation"
 jupyter: julia-1.9
 ---
+
+Often, particularly when we have lots of parameters to estimate, it's computationally prohibitive (if not actually impossible) to try to specify the posterior distribution. In these cases, we need to approximate the posterior via simulation.
+
+There are many different approaches for, including grid approximation, quadtratic approximation, and various flavors of Markov Chain Monte Carlo (MCMC) algorithms (e.g. Metropolis, Gibbs, Hamiltonian).
+
+# Grid approximation
+
+Imagine we have the following beta-binomial model:
+
+$Y|\pi \sim Bin(10, \pi)$
+$\pi \sim Beta(2, 2)$
+
+where Y is the number of successes in 10 independent trials. Each trial has probability $\pi$ of succeeding. Imagine that we observe Y = 9 successes.
+
+Although we can specify the posterior analytically, we can also approximate it with grid approximation.
+
+```{julia}
+using Distributions
+using Plots
+using Random
+using StatsPlots
+using StatsBase
+
+Random.seed!(0408)
+
+#vector of potential pi values
+pi_grid = 0:0.1:1
+
+#prior beta distribution
+d_beta = Beta(2, 2)
+
+```
+
+```{julia}
+#evaluate the pdf at each value of pi
+priors = pdf.(d_beta, pi_grid)
+
+#calculate the likelihood at each value of pi
+likelihoodz = pdf.(Binomial.(10, pi_grid), 9)
+
+#compute the un-normalized posterior
+un_normalized = likelihoodz .* priors
+
+#normalize the posterior
+posteriorz = un_normalized ./ sum(un_normalized)
+```
+
+
+And then we can plot the resulting grid-approximated posterior
+
+```{julia}
+plot(pi_grid, posteriorz)
+scatter!(pi_grid, posteriorz)
+```
+
+Of course, if our pi_grid contains more closely-spaced values, the approximated posterior becomes smoother:
+
+```{julia}
+pi2 = 0:0.01:1
+prior2 = pdf.(d_beta, pi2)
+
+#calculate the likelihood at each value of pi
+likelihood2 = pdf.(Binomial.(10, pi2), 9)
+
+#compute the un-normalized posterior
+un_normalized2 = likelihood2 .* prior2
+
+#normalize the posterior
+posterior2 = un_normalized2 ./ sum(un_normalized2)
+
+plot(pi2, posterior2)
+scatter!(pi2, posterior2)
+```
+
+We can add the true resulting distribution -- a Beta(11, 3) distribution -- to this to show the approximation vs the true value:
+
+```{julia}
+s = sample(pi2, Weights(posterior2), 100_000)
+
+density(s, label="Approximate Posterior")
+
+true_beta = Beta(11, 3)
+ys = pdf.(true_beta, pi2)
+plot!(pi2, ys, label="True Beta(11,3)")
+```
+
+One issue with grid approximation is that it quickly becomes intractable with many parameters -- it is difficult to get a dense enough grid to get a good approximation as you start adding parameters.
+
+So here's MCMC to the rescue!
+
+# MCMC
+
+Like grid approximation models, MCMC samples are approximations.
+
+Unlike grid approximation samples, though, MCMC samples are not independent. For ${\theta^1, \theta^2, ..., \theta^N}$, each $\theta^{(i+1)}$ is conditional on $\theta^i$. Or:
+
+$f(\theta^{(i+1)} | \theta^i, y)$
+
+## Metropolis-Hastings algorithm
+
+The Metropolis-Hastings algo is a 2-step process for approximating a posterior distribution:
+
+1. Propose a new "location" in the theoretical posterior;
+2. Decide whether or not to go there.
+
+To unpack this a little bit:
+
+**Step 1: Propose a new location**
+
+We don't know the posterior we're drawing from, but we can use a "proposal model" to draw new locations from. We can use different distributions, but the Uniform distribution is the most straightforward. 
+Assume we have a current location, $x$, and bandwidth, $w$, then our proposed new location, $x'$, is:
+
+$x'|x \sim Unif(x - w, x + w)$
+
+**Step 2: Decide whether or not to go there**
+
+We have to calculate the acceptance probability (the probability of accepting $x'$). 
+
+If the unnormalized posterior plausibility of the proposed location $x'$ is greather than that of the current location $x$ (i.e. $f(x')L(x'|y) > f(x)L(x|y)$), *definitely* go to $x'$.
+
+Otherwise, *maybe* go to $x'$. This feature (maybe moving even if the proposed location is less likely than the current location) prevents the chain from getting stuck.
+
+We can define the acceptance probability as:
+
+$$\alpha = min\{1, \frac{f(x')L(x'|y)}{f(x)L(x|y)} \frac{q(x|x')}{q(x'|x)}\}$$
+
+
+If we use a symmetric proposal model (like the Uniform distribution), then this simplifies to:
+
+$$\alpha = min\{1, \frac{f(x')L(x'|y)}{f(x)L(x|y)}\}$$
+
+This can further simplify to:
+
+$$\alpha = min\{1, \frac{f(x'|y)}{f(x|y)}\}$$
+
+Given this, in scenario 1, if $f(x'|y) \ge f(x|y)$, then $alpha = 1 $, and we will definitely move to $x'$
+
+Otherwise, if $\alpha = \frac{f(x'|y)}{f(x|y)} \lt 1$, then we might move there with probability $\alpha$
+
+### example
+
+Imagine we have a Normal-Normal model such that:
+
+$Y|\mu \sim N(\mu, 0.75^2)$
+$\mu \sim N(0, 1^2)$
+
+i.e. Y is a numerical outcome that varies normally around $\mu$ with standard deviation 0.75
+
+```{julia}
+function one_mh_iter(w, current)
+    u = Uniform(current - w, current + w)
+    proposal = rand(u, 1)[1]
+
+    proposal_plaus = pdf(Normal(0, 1), proposal) * pdf(Normal(proposal, 0.75), 6.25)
+    current_plaus = pdf(Normal(0, 1), current) * pdf(Normal(current, 0.75), 6.25)
+
+    α = minimum([1, proposal_plaus / current_plaus])
+
+    next = sample([proposal, current], Weights([α, α - 1]), 1)[1]
+
+    r = [current, proposal, α, next]
+    return r
+end
+```
+
+RESUME HERE -- CHECK THE ABOVE
+
+```{julia}
+res = one_mh_iter(1, 4)
+```
