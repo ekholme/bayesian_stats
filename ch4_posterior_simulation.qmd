@@ -7,7 +7,7 @@ Often, particularly when we have lots of parameters to estimate, it's computatio
 
 There are many different approaches for, including grid approximation, quadtratic approximation, and various flavors of Markov Chain Monte Carlo (MCMC) algorithms (e.g. Metropolis, Gibbs, Hamiltonian).
 
-# Grid approximation
+## Grid approximation
 
 Imagine we have the following beta-binomial model:
 
@@ -92,7 +92,7 @@ One issue with grid approximation is that it quickly becomes intractable with ma
 
 So here's MCMC to the rescue!
 
-# MCMC
+## MCMC
 
 Like grid approximation models, MCMC samples are approximations.
 
@@ -146,29 +146,77 @@ Otherwise, if $\alpha = \frac{f(x'|y)}{f(x|y)} \lt 1$, then we might move there 
 Imagine we have a Normal-Normal model such that:
 
 $Y|\mu \sim N(\mu, 0.75^2)$
+
 $\mu \sim N(0, 1^2)$
 
 i.e. Y is a numerical outcome that varies normally around $\mu$ with standard deviation 0.75
 
+Then imagine we observe an outcome Y = 6.25. Given this, and the above, we can [calculate](https://www.bayesrulesbook.com/chapter-5#eq:n-n-post-ch5) the posterior model as:
+
+$\mu | (Y = 6.25) \sim N(4, 0.6^2)$
+
+We can run through one iteration of the Metropolis-Hastings algorithm with the following, where `w` is the bandwidth of our Uniform proposal model and `current` is the current value on the chain:
+
 ```{julia}
 function one_mh_iter(w, current)
+    c = Float64(current)
     u = Uniform(current - w, current + w)
     proposal = rand(u, 1)[1]
 
+    #proposal_plaus = prior * likelihood
     proposal_plaus = pdf(Normal(0, 1), proposal) * pdf(Normal(proposal, 0.75), 6.25)
+
+    #current_plaus = prior * likelihood
     current_plaus = pdf(Normal(0, 1), current) * pdf(Normal(current, 0.75), 6.25)
 
     α = minimum([1, proposal_plaus / current_plaus])
 
-    next = sample([proposal, current], Weights([α, α - 1]), 1)[1]
+    next = sample([proposal, c], Weights([α, 1 - α]), 1)[1]
 
-    r = [current, proposal, α, next]
-    return r
+    return next
 end
 ```
 
-RESUME HERE -- CHECK THE ABOVE
 
 ```{julia}
 res = one_mh_iter(1, 4)
 ```
+
+And then from there, we can use the logic in the `one_mh_iter` function to take a "tour" and create an entire chain, which will be our simulated distribution.
+
+```{julia}
+function mh_tour(w, current, N::Int)
+    μ = Vector{Float64}(undef, N)
+
+    for i ∈ eachindex(μ)
+        r = one_mh_iter(w, current)
+        μ[i] = r
+        current = r
+    end
+    return μ
+end
+```
+
+```{julia}
+res = mh_tour(1, 4, 10_000)
+```
+
+and we can look at the trace plot and the histogram to see the distribution we've simulated:
+
+```{julia}
+p1 = plot(res, label="");
+p2 = histogram(res);
+
+plot(p1, p2, layout=@layout([a b]))
+```
+
+And now let's check out work -- we should get approximately $\mu = 4$ and $\sigma = 0.6$
+
+```{julia}
+[mean(res), std(res)]
+```
+
+## Other Algorithms 
+
+Metropolis-Hastings is the fundamental MCMC algorithm, but it's often not the one used in applications today. Other algorithms, such as the Gibbs algorithm or the Hamiltonian Monte Carlo (HMC) algorithm are more common, with HMC being the algorithm used by the `{rstan}` package.
+

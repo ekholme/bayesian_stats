@@ -1,0 +1,166 @@
+---
+title: "Ch 5 - Linear Regression"
+jupyter: julia-1.9
+---
+
+We can further apply Bayesian statistics to help with estimating the parameters of a linear regression model. Here, I'm going to use Julia's [Turing.jl](https://turinglang.org/) package to fit the model.
+
+I'll generate some fake data to use as an example
+
+```{julia}
+using Distributions
+using Plots
+using Turing
+using LinearAlgebra
+using Random
+using StatsPlots
+using GLM
+
+Random.seed!(0408)
+```
+
+## Import Data
+
+```{julia}
+
+n = 1000
+
+𝐗 = randn(n, 3)
+
+β = [1.0, 2.0, 3.0]
+
+f(x) = 0.5 .+ x * β
+
+ϵ = rand(Normal(0, 1.0), n)
+
+y = f(𝐗) + ϵ;
+```
+
+
+Here's what we're modeling:
+
+$Y_i \sim N(\alpha + \beta^T \bf X_i, \sigma^2)$
+
+In words, $Y_i$ is normally distributed with an expected value of the output of a typical linear model and a variance of $\sigma^2$.
+
+## Define Model
+
+Next, we can use Turing's `@model macro` to define our model. One important part of defining our model is setting priors.
+
+In this model, I'm going to use pretty weak priors, and I'm going to use these same priors for all of the variables.
+
+```{julia}
+@model function lin_reg(x, y)
+    n_feat = size(x, 2)
+
+    #priors
+    α ~ Normal(0, 2)
+    b ~ MvNormal(zeros(n_feat), 3.0 * I)
+    σ ~ Exponential(1)
+
+    #estimate the likelihood
+    for i ∈ eachindex(y)
+        y[i] ~ Normal(α + x[i, :]' * b, σ)
+    end
+
+    #alternatively:
+    # μ = α .+ x * b
+    # return y ~ MvNormal(μ, σ * I)
+end
+```
+
+In math notation, our model is:
+
+$Y_i | \alpha, \beta, \sigma \sim N(\alpha + \bf X_i ' \beta, \sigma^2)$
+
+$\alpha \sim N(0, 2)$
+
+$\beta \sim N(\mu, \Sigma)$
+
+where $\mu$ is a length-3 zero-vector and $\Sigma$ is a diagonal matrix with 3s on the diagonal
+
+$\sigma \sim Exp(1)$
+
+## Simulate the Posterior
+
+Ok so now we have this model set up, which is what a fairly typical linear regression model might look like, and now we need to simulate the posterior. We can do that in Turing as follows: 
+
+```{julia}
+model = lin_reg(𝐗, y)
+
+chn = sample(model, NUTS(), MCMCThreads(), 5_000, 2);
+```
+
+And we can check the trace plot and the posterior distributions:
+
+```{julia}
+plot(chn)
+```
+
+## Extract Information from Posterior
+
+If we want to check the summary statistics for our estimates:
+
+```{julia}
+summarize(chn)
+```
+
+or imagine we wanted to compute quantiles for our chains
+
+```{julia}
+quantile(chn)
+```
+
+if we wanted, for example, 80% confidence for each parameter, we could supply this:
+
+```{julia}
+quantile(chn; q=[0.1, 0.9])
+```
+
+and if we wanted to get the quantiles for each chain separately:
+
+```{julia}
+qs = quantile(chn; q=[0.1, 0.9], append_chains=false)
+
+#and let's look at just the first one
+qs[1]
+```
+
+## Predicting Y 
+
+```{julia}
+ŷ = Vector{Union{Missing,Float64}}(undef, length(y))
+
+preds = predict(lin_reg(𝐗, ŷ), chn)
+
+```
+
+extract predictions for row 1 (y1) and plot the distribution of predictions
+
+```{julia}
+y1 = getindex(preds, "y[1]")
+
+density(y1.data)
+```
+
+get the mean predicted value for each observation in the data:
+
+```{julia}
+mean_preds = summarize(preds)[:, :mean]
+```
+
+TODO -- COMPARE PREDICTIONS TO ACTUAL Y AND TO GLM VERSION
+
+## Compare to OLS
+
+```{julia}
+bayes_coefs = summarize(chn)[:, :mean]
+```
+
+```{julia}
+ols_coefs = hcat(ones(length(y)), 𝐗) \ y
+```
+
+```{julia}
+isapprox(ols_coefs, bayes_coefs[1:4], atol=0.01)
+```

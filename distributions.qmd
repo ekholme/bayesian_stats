@@ -12,3 +12,31 @@ Used when Y is a count outcome (e.g. the number of wins in a set of matches)
 $Y|\pi \sim Bin(n, \pi)$
 
 where $\pi$ is the probability of success in a given trial
+
+## Multivariate Normal
+
+A multivariate normal distribution is an abstraction of the univariate normal distribution. It's parameterized by two components: 
+
+- a mean vector, $\mu$, and;
+- a covariance matrix, $\Sigma$
+
+The diagonal of the covariance matrix describes each variable's (e.g. $x_i$) variance, whereas all off-diagonal elements describe the covariance between, $x_i$ and $x_j$ or whatever you want to refer to the variables as.
+
+If the off-diagonal elements are all 0, then all of the variables are independent. The code below shows an example of a multivariate normal distribution with 3 independent variables, all with a mean of 0 and a variance of 5.
+
+```{julia}
+using Distributions
+using LinearAlgebra
+
+p = 3
+
+d = MvNormal(zeros(p), 5.0 * I)
+```
+
+And the code below will do create a multivariate normal distribution where the variables are correlated
+
+```{julia}
+Σ = [[1.0, 0.8, 0.7] [0.8, 1.0, 0.9] [0.7, 0.9, 1.0]]
+
+d2 = MvNormal(zeros(p), Σ)
+```
