@@ -204,8 +204,14 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./ch5_linear_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ch 5 - Linear Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./distributions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Appendix - Distributions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Appendix - Distributions</span></span></a>
   </div>
 </li>
     </ul>
@@ -298,7 +304,7 @@ window.Quarto = {
 </section>
 <section id="worked-example" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Worked example</h1>
-<div id="8d110354" class="cell" data-execution_count="1">
+<div id="94e35694" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">RDatasets</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Statistics</span></span>
@@ -341,21 +347,21 @@ window.Quarto = {
 </div>
 </div>
 <p>let’s look at the overall probability of default</p>
-<div id="c541924c" class="cell" data-execution_count="2">
+<div id="0107262b" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(d.<span class="op">:</span>Default)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>0.0333</code></pre>
 </div>
 </div>
 <p>and the overall probability of being a student</p>
-<div id="8b915580" class="cell" data-execution_count="3">
+<div id="d329581e" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(d.<span class="op">:</span>Student)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>0.2944</code></pre>
 </div>
 </div>
 <p>and the probability of default by student type</p>
-<div id="3667af63" class="cell" data-execution_count="4">
+<div id="e0477968" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p_tbl <span class="op">=</span> <span class="pp">@chain</span> d <span class="cf">begin</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">groupby</span>(<span class="op">:</span>Student)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">combine</span>(<span class="op">:</span>Default <span class="op">=&gt;</span> mean)</span>
@@ -394,7 +400,7 @@ window.Quarto = {
 <p>so, the likelihoods for student types are, <span class="math inline">\(L(S|D) = .043\)</span> and <span class="math inline">\(L(S^c|D) = .029\)</span></p>
 <p>If we want to figure out the probability of default for students, we can use:</p>
 <p><span class="math inline">\(P(S|D) = \frac{P(S)L(S|D)}{P(D)}\)</span></p>
-<div id="b723074d" class="cell" data-execution_count="5">
+<div id="b198420f" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p_s_d <span class="op">=</span> (<span class="fu">mean</span>(d.<span class="op">:</span>Student) <span class="op">*</span> <span class="fl">0.043</span>) <span class="op">/</span> (<span class="fu">mean</span>(d.<span class="op">:</span>Default))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>0.3801561561561561</code></pre>

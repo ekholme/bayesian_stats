@@ -140,23 +140,83 @@
     ]
   },
   {
+    "objectID": "ch5_linear_regression.html",
+    "href": "ch5_linear_regression.html",
+    "title": "5  Ch 5 - Linear Regression",
+    "section": "",
+    "text": "5.1 Generate Fake Data\nI’ll generate some fake data to use as an example.\nn = 1000\n\n𝐗 = randn(n, 3)\n\nβ = [1.0, 2.0, 3.0]\n\nf(x) = 0.5 .+ x * β\n\nϵ = rand(Normal(0, 1.0), n)\n\ny = f(𝐗) + ϵ;\nHere’s what we’re modeling:\n\\(Y_i \\sim N(\\alpha + \\beta^T \\bf X_i, \\sigma^2)\\)\nIn words, \\(Y_i\\) is normally distributed with an expected value of the output of a typical linear model and a variance of \\(\\sigma^2\\).",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+    ]
+  },
+  {
+    "objectID": "ch5_linear_regression.html#define-model",
+    "href": "ch5_linear_regression.html#define-model",
+    "title": "5  Ch 5 - Linear Regression",
+    "section": "5.2 Define Model",
+    "text": "5.2 Define Model\nNext, we can use Turing’s @model macro to define our model. One important part of defining our model is setting priors.\nIn this model, I’m going to use pretty weak priors, and I’m going to use these same priors for all of the variables.\n\n@model function lin_reg(x, y)\n    n_feat = size(x, 2)\n\n    #priors\n    α ~ Normal(0, 2)\n    b ~ MvNormal(zeros(n_feat), 3.0 * I)\n    σ ~ Exponential(1)\n\n    #estimate the likelihood\n    for i ∈ eachindex(y)\n        y[i] ~ Normal(α + x[i, :]' * b, σ)\n    end\n\n    #alternatively:\n    # μ = α .+ x * b\n    # return y ~ MvNormal(μ, σ * I)\nend\n\nlin_reg (generic function with 2 methods)\n\n\nIn math notation, our model is:\n\\(Y_i | \\alpha, \\beta, \\sigma \\sim N(\\alpha + \\bf X_i ' \\beta, \\sigma^2)\\)\n\\(\\alpha \\sim N(0, 2)\\)\n\\(\\beta \\sim N(\\mu, \\Sigma)\\)\nwhere \\(\\mu\\) is a length-3 zero-vector and \\(\\Sigma\\) is a diagonal matrix with 3s on the diagonal\n\\(\\sigma \\sim Exp(1)\\)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+    ]
+  },
+  {
+    "objectID": "ch5_linear_regression.html#simulate-the-posterior",
+    "href": "ch5_linear_regression.html#simulate-the-posterior",
+    "title": "5  Ch 5 - Linear Regression",
+    "section": "5.3 Simulate the Posterior",
+    "text": "5.3 Simulate the Posterior\nOk so now we have this model set up, which is what a fairly typical linear regression model might look like, and now we need to simulate the posterior. We can do that in Turing as follows:\n\nmodel = lin_reg(𝐗, y)\n\nchn = sample(model, NUTS(), MCMCThreads(), 5_000, 2);\n\n┌ Warning: Only a single thread available: MCMC chains are not sampled in parallel\n└ @ AbstractMCMC C:\\Users\\eric_ekholm\\.julia\\packages\\AbstractMCMC\\Es490\\src\\sample.jl:307\n┌ Info: Found initial step size\n└   ϵ = 0.0125\n┌ Info: Found initial step size\n└   ϵ = 0.003125\n\n\nAnd we can check the trace plot and the posterior distributions:\n\nplot(chn)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThese plots give some useful diagnostics. The trace plots show how the chains (in blue and yellow) are moving around the range of posterior plausible values for each parameter, and the distributions show the posterior distributions for each parameter. Since we know the true values for these parameters, we can see that simulations are producing posteriors representative of the ground truth.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+    ]
+  },
+  {
+    "objectID": "ch5_linear_regression.html#extract-information-from-posterior",
+    "href": "ch5_linear_regression.html#extract-information-from-posterior",
+    "title": "5  Ch 5 - Linear Regression",
+    "section": "5.4 Extract Information from Posterior",
+    "text": "5.4 Extract Information from Posterior\nWe can also extract summary information from our simulation. We might care about the parameter means (we probably also care about their distributions, but more on that next) and other diagnostics, which we can access via summarize().\n\nsummarize(chn)\n\n\n  parameters      mean       std      mcse     ess_bulk    ess_tail      rhat  ⋯\n      Symbol   Float64   Float64   Float64      Float64     Float64   Float64  ⋯\n           α    0.4714    0.0321    0.0002   20468.4832   7346.0489    1.0000  ⋯\n        b[1]    1.0320    0.0320    0.0002   17505.5390   7545.8046    0.9999  ⋯\n        b[2]    2.0087    0.0322    0.0002   17638.6378   8224.9626    1.0000  ⋯\n        b[3]    3.0360    0.0319    0.0002   21294.1279   7880.1851    1.0002  ⋯\n           σ    1.0221    0.0228    0.0002   21911.5011   7597.6585    1.0000  ⋯\n                                                                1 column omitted\n\n\n\n\nIn addition to providing parameter means, this function also gives us the rhat values for each parameter. rhat describes the ratio of the variability across all chains to the variability within any individual chain. We want this to be approximately 1, and values greater than like 1.05 might be concerning.\nNote that the formula here is:\n\\(\\hat{R} \\approx \\sqrt{\\frac{V_{combined}}{V_{within}}}\\)\nAnother thing we might want to do is extract quantiles from our chain. In a Bayesian context, we probably care more about quantiles/distributions than just parameter means, otherwise like why bother to adopt a Bayesian approach at all?\n\nquantile(chn)\n\n\nQuantiles\n  parameters      2.5%     25.0%     50.0%     75.0%     97.5% \n      Symbol   Float64   Float64   Float64   Float64   Float64 \n           α    0.4080    0.4497    0.4715    0.4932    0.5344\n        b[1]    0.9689    1.0104    1.0320    1.0534    1.0941\n        b[2]    1.9464    1.9867    2.0087    2.0305    2.0720\n        b[3]    2.9739    3.0143    3.0362    3.0575    3.0980\n           σ    0.9785    1.0065    1.0219    1.0372    1.0678\n\n\n\n\nBy default, quantile() provides the 2.5%, 25%, 50%, 75%, and 97.5% percentiles. If we wanted, for example, 80% confidence for each parameter, we could supply this:\n\nquantile(chn; q=[0.1, 0.9])\n\n\nQuantiles\n  parameters     10.0%     90.0% \n      Symbol   Float64   Float64 \n           α    0.4302    0.5125\n        b[1]    0.9906    1.0729\n        b[2]    1.9673    2.0502\n        b[3]    2.9956    3.0773\n           σ    0.9932    1.0514\n\n\n\n\nand if we wanted to get the quantiles for each chain separately:\n\nqs = quantile(chn; q=[0.1, 0.9], append_chains=false)\n\n#and let's look at just the first one\nqs[1]\n\n\nQuantiles (Chain 1)\n  parameters     10.0%     90.0% \n      Symbol   Float64   Float64 \n           α    0.4303    0.5125\n        b[1]    0.9922    1.0733\n        b[2]    1.9676    2.0502\n        b[3]    2.9955    3.0778\n           σ    0.9937    1.0510",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+    ]
+  },
+  {
+    "objectID": "ch5_linear_regression.html#predicting-y",
+    "href": "ch5_linear_regression.html#predicting-y",
+    "title": "5  Ch 5 - Linear Regression",
+    "section": "5.5 Predicting Y",
+    "text": "5.5 Predicting Y\nSo, probably obvious, but another thing we’re probably interested in doing is predicting our outcome. In a Bayesian framework, though, these predictions won’t be a single value – they’ll be distributions. Or, rather, simulated/approximate distributions.\nThe way this works is that, for each observation of \\(y\\), we’ll get \\(j\\) predictions, where \\(j\\) is the number of parameter sets across the chains. Since we have 2 chains, each with 5,000 iterations here, we’ll get 10,000 predictions for each observation of \\(y\\) here.\nIn notation:\n\\(Y_i | \\alpha^j, \\beta^j, \\sigma^j \\sim N(\\alpha^j + \\bf X_i ' \\beta^j, \\sigma{^j}^2)\\)\nwhere \\(j\\) is a given parameter set.\nSo in our current case, where we have 1,000 observations of \\(y\\) and 2 length-5,000 chains, we will have \\(1,000*2*5,000 = 10,000,000\\) predicted values.\nIn Turing, we can get those like so:\n\nŷ = Vector{Union{Missing,Float64}}(undef, length(y))\n\npreds = predict(lin_reg(𝐗, ŷ), chn);\n\nNow, if we want to extract predictions for just our first observation (y1) and plot the distribution of predictions, we can do:\n\ny1 = getindex(preds, \"y[1]\")\n\ndensity(y1.data)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAnd we can get the mean prediction for each observation in the data if we want:\n\nmean_preds = summarize(preds)[:, :mean]\n\n1000-element Vector{Float64}:\n  5.7006268396886695\n -1.0506371972638873\n -3.1732895813657738\n  4.5049520173210675\n  2.6660448198513644\n -1.2911138975566685\n  2.3099148855543086\n  1.1421499549064436\n  0.37195589822577046\n  6.828458164221361\n -3.8660133764191005\n  0.48796232003761836\n  2.3802240108862707\n  ⋮\n -3.75015072568158\n  0.7680897886182543\n -3.628382116045487\n -1.0757865278055503\n  0.8049089018586542\n  4.32923063569182\n  1.8837023355657638\n  1.0491657806017156\n -7.241138183105443\n -6.315218508659162\n -7.767339811205812\n  0.7141600320377279",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+    ]
+  },
+  {
+    "objectID": "ch5_linear_regression.html#compare-to-ols",
+    "href": "ch5_linear_regression.html#compare-to-ols",
+    "title": "5  Ch 5 - Linear Regression",
+    "section": "5.6 Compare to OLS",
+    "text": "5.6 Compare to OLS\nSince we simulated our data, we know what our true parameter values are, and so we can just kinda look at the parameter estimates from the Bayesian framework and see that they’re very close to the true values. But it could also be instructive to compare the parameter estimates – and the predicted values – to those we get from OLS.\nSo let’s first get our mean parameter estimates from the Bayesian framework:\n\nbayes_coefs = summarize(chn)[:, :mean]\n\n5-element Vector{Float64}:\n 0.47143324916301155\n 1.0319528048099806\n 2.008675224648713\n 3.036046413382201\n 1.0221377365466682\n\n\nThen we can get our OLS coefficients using Julia’s linear solver notation (we could also use the GLM package).\n\nols_coefs = hcat(ones(length(y)), 𝐗) \\ y\n\n4-element Vector{Float64}:\n 0.4714517742708525\n 1.0324877848634773\n 2.0094769140167044\n 3.03674656413514\n\n\nAnd we can see that they’re basically the same with the isapprox() function.\n\nisapprox(ols_coefs, bayes_coefs[1:4], atol=0.01)\n\ntrue\n\n\nFinally, let’s say we wanted to compare the predictions of the Bayesian model to those of the OLS model. We can calculate the mean squared error for each.\nWe don’t really need to do this, since if the parameters are essentially the same, we know the model predictions will also be essentially the same, but it’s easy to do so whatever.\n\nŷ_ols = hcat(ones(length(y)), 𝐗) * ols_coefs;\n\nŷ_bayes = summarize(preds)[:, :mean];\n\nfunction mse(y, ŷ)\n    return sum((y .- ŷ) .^ 2) / length(y)\nend\n\nmse (generic function with 1 method)\n\n\n\nmse_ols = round(mse(y, ŷ_ols), digits=2);\nmse_bayes = round(mse(y, ŷ_bayes), digits=2);\n\nprint(\"OLS loss: $mse_ols \\nBayes loss: $mse_bayes\")\n\nOLS loss: 1.04 \nBayes loss: 1.04\n\n\nSo there we go – the whole process of fitting a Bayesian linear regression!",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+    ]
+  },
+  {
     "objectID": "distributions.html",
     "href": "distributions.html",
-    "title": "5  Appendix - Distributions",
+    "title": "6  Appendix - Distributions",
     "section": "",
-    "text": "5.1 Binomial Distribution\nUsed when Y is a count outcome (e.g. the number of wins in a set of matches)\n\\(Y|\\pi \\sim Bin(n, \\pi)\\)\nwhere \\(\\pi\\) is the probability of success in a given trial",
+    "text": "6.1 Binomial Distribution\nUsed when Y is a count outcome (e.g. the number of wins in a set of matches)\n\\(Y|\\pi \\sim Bin(n, \\pi)\\)\nwhere \\(\\pi\\) is the probability of success in a given trial",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Appendix - Distributions</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Appendix - Distributions</span>"
     ]
   },
   {
     "objectID": "distributions.html#multivariate-normal",
     "href": "distributions.html#multivariate-normal",
-    "title": "5  Appendix - Distributions",
-    "section": "5.2 Multivariate Normal",
-    "text": "5.2 Multivariate Normal\nA multivariate normal distribution is an abstraction of the univariate normal distribution. It’s parameterized by two components:\n\na mean vector, \\(\\mu\\), and;\na covariance matrix, \\(\\Sigma\\)\n\nThe diagonal of the covariance matrix describes each variable’s (e.g. \\(x_i\\)) variance, whereas all off-diagonal elements describe the covariance between, \\(x_i\\) and \\(x_j\\) or whatever you want to refer to the variables as.\nIf the off-diagonal elements are all 0, then all of the variables are independent. The code below shows an example of a multivariate normal distribution with 3 independent variables, all with a mean of 0 and a variance of 5.\n\nusing Distributions\nusing LinearAlgebra\n\np = 3\n\nd = MvNormal(zeros(p), 5.0 * I)\n\nIsoNormal(\ndim: 3\nμ: [0.0, 0.0, 0.0]\nΣ: [5.0 0.0 0.0; 0.0 5.0 0.0; 0.0 0.0 5.0]\n)\n\n\nAnd the code below will do create a multivariate normal distribution where the variables are correlated\n\nΣ = [[1.0, 0.8, 0.7] [0.8, 1.0, 0.9] [0.7, 0.9, 1.0]]\n\nd2 = MvNormal(zeros(p), Σ)\n\nFullNormal(\ndim: 3\nμ: [0.0, 0.0, 0.0]\nΣ: [1.0 0.8 0.7; 0.8 1.0 0.9; 0.7 0.9 1.0]\n)",
+    "title": "6  Appendix - Distributions",
+    "section": "6.2 Multivariate Normal",
+    "text": "6.2 Multivariate Normal\nA multivariate normal distribution is an abstraction of the univariate normal distribution. It’s parameterized by two components:\n\na mean vector, \\(\\mu\\), and;\na covariance matrix, \\(\\Sigma\\)\n\nThe diagonal of the covariance matrix describes each variable’s (e.g. \\(x_i\\)) variance, whereas all off-diagonal elements describe the covariance between, \\(x_i\\) and \\(x_j\\) or whatever you want to refer to the variables as.\nIf the off-diagonal elements are all 0, then all of the variables are independent. The code below shows an example of a multivariate normal distribution with 3 independent variables, all with a mean of 0 and a variance of 5.\n\nusing Distributions\nusing LinearAlgebra\n\np = 3\n\nd = MvNormal(zeros(p), 5.0 * I)\n\nIsoNormal(\ndim: 3\nμ: [0.0, 0.0, 0.0]\nΣ: [5.0 0.0 0.0; 0.0 5.0 0.0; 0.0 0.0 5.0]\n)\n\n\nAnd the code below will do create a multivariate normal distribution where the variables are correlated\n\nΣ = [[1.0, 0.8, 0.7] [0.8, 1.0, 0.9] [0.7, 0.9, 1.0]]\n\nd2 = MvNormal(zeros(p), Σ)\n\nFullNormal(\ndim: 3\nμ: [0.0, 0.0, 0.0]\nΣ: [1.0 0.8 0.7; 0.8 1.0 0.9; 0.7 0.9 1.0]\n)",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Appendix - Distributions</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Appendix - Distributions</span>"
     ]
   }
 ]

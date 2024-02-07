@@ -11,6 +11,7 @@ book:
     - ch2_beta_binomial.qmd
     - ch3_gamma_poisson.qmd
     - ch4_posterior_simulation.qmd
+    - ch5_linear_regression.qmd
     - distributions.qmd
 
 format:
