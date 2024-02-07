@@ -5,8 +5,6 @@ jupyter: julia-1.9
 
 We can further apply Bayesian statistics to help with estimating the parameters of a linear regression model. Here, I'm going to use Julia's [Turing.jl](https://turinglang.org/) package to fit the model.
 
-I'll generate some fake data to use as an example
-
 ```{julia}
 using Distributions
 using Plots
@@ -19,7 +17,9 @@ using GLM
 Random.seed!(0408)
 ```
 
-## Import Data
+## Generate Fake Data
+
+I'll generate some fake data to use as an example.
 
 ```{julia}
 
@@ -97,21 +97,29 @@ And we can check the trace plot and the posterior distributions:
 plot(chn)
 ```
 
+These plots give some useful diagnostics. The trace plots show how the chains (in blue and yellow) are moving around the range of posterior plausible values for each parameter, and the distributions show the posterior distributions for each parameter. Since we know the true values for these parameters, we can see that simulations are producing posteriors representative of the ground truth.
+
 ## Extract Information from Posterior
 
-If we want to check the summary statistics for our estimates:
+We can also extract summary information from our simulation. We might care about the parameter means (we probably also care about their distributions, but more on that next) and other diagnostics, which we can access via `summarize()`. 
 
 ```{julia}
 summarize(chn)
 ```
 
-or imagine we wanted to compute quantiles for our chains
+In addition to providing parameter means, this function also gives us the `rhat` values for each parameter. `rhat` describes the ratio of the variability across all chains to the variability within any individual chain. We want this to be approximately 1, and values greater than like 1.05 might be concerning.
+
+Note that the formula here is:
+
+$\hat{R} \approx \sqrt{\frac{V_{combined}}{V_{within}}}$
+
+Another thing we might want to do is extract quantiles from our chain. In a Bayesian context, we probably care more about quantiles/distributions than just parameter means, otherwise like why bother to adopt a Bayesian approach at all?
 
 ```{julia}
 quantile(chn)
 ```
 
-if we wanted, for example, 80% confidence for each parameter, we could supply this:
+By default, `quantile()` provides the 2.5%, 25%, 50%, 75%, and 97.5% percentiles. If we wanted, for example, 80% confidence for each parameter, we could supply this:
 
 ```{julia}
 quantile(chn; q=[0.1, 0.9])
@@ -128,14 +136,28 @@ qs[1]
 
 ## Predicting Y 
 
+So, probably obvious, but another thing we're probably interested in doing is predicting our outcome. In a Bayesian framework, though, these predictions won't be a single value -- they'll be distributions. Or, rather, simulated/approximate distributions.
+
+The way this works is that, for each observation of $y$, we'll get $j$ predictions, where $j$ is the number of parameter sets across the chains. Since we have 2 chains, each with 5,000 iterations here, we'll get 10,000 predictions for each observation of $y$ here.
+
+In notation:
+
+$Y_i | \alpha^j, \beta^j, \sigma^j \sim N(\alpha^j + \bf X_i ' \beta^j, \sigma{^j}^2)$
+
+where $j$ is a given parameter set.
+
+So in our current case, where we have 1,000 observations of $y$ and 2 length-5,000 chains, we will have $1,000*2*5,000 = 10,000,000$ predicted values.
+
+In Turing, we can get those like so:
+
 ```{julia}
 ŷ = Vector{Union{Missing,Float64}}(undef, length(y))
 
-preds = predict(lin_reg(𝐗, ŷ), chn)
+preds = predict(lin_reg(𝐗, ŷ), chn);
 
 ```
 
-extract predictions for row 1 (y1) and plot the distribution of predictions
+Now, if we want to extract predictions for just our first observation (y1) and plot the distribution of predictions, we can do:
 
 ```{julia}
 y1 = getindex(preds, "y[1]")
@@ -143,24 +165,53 @@ y1 = getindex(preds, "y[1]")
 density(y1.data)
 ```
 
-get the mean predicted value for each observation in the data:
+And we can get the mean prediction for each observation in the data if we want:
 
 ```{julia}
 mean_preds = summarize(preds)[:, :mean]
 ```
 
-TODO -- COMPARE PREDICTIONS TO ACTUAL Y AND TO GLM VERSION
-
 ## Compare to OLS
+
+Since we simulated our data, we know what our true parameter values are, and so we can just kinda look at the parameter estimates from the Bayesian framework and see that they're very close to the true values. But it could also be instructive to compare the parameter estimates -- and the predicted values -- to those we get from OLS.
+
+So let's first get our mean parameter estimates from the Bayesian framework:
 
 ```{julia}
 bayes_coefs = summarize(chn)[:, :mean]
 ```
 
+Then we can get our OLS coefficients using Julia's linear solver notation (we could also use the `GLM` package).
+
 ```{julia}
 ols_coefs = hcat(ones(length(y)), 𝐗) \ y
 ```
 
+And we can see that they're basically the same with the `isapprox()` function.
+
 ```{julia}
 isapprox(ols_coefs, bayes_coefs[1:4], atol=0.01)
 ```
+
+Finally, let's say we wanted to compare the predictions of the Bayesian model to those of the OLS model. We can calculate the mean squared error for each.
+
+We don't *really* need to do this, since if the parameters are essentially the same, we know the model predictions will also be essentially the same, but it's easy to do so whatever.
+
+```{julia}
+ŷ_ols = hcat(ones(length(y)), 𝐗) * ols_coefs;
+
+ŷ_bayes = summarize(preds)[:, :mean];
+
+function mse(y, ŷ)
+    return sum((y .- ŷ) .^ 2) / length(y)
+end
+```
+
+```{julia}
+mse_ols = round(mse(y, ŷ_ols), digits=2);
+mse_bayes = round(mse(y, ŷ_bayes), digits=2);
+
+print("OLS loss: $mse_ols \nBayes loss: $mse_bayes")
+```
+
+So there we go -- the whole process of fitting a Bayesian linear regression!
