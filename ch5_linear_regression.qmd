@@ -1,5 +1,5 @@
 ---
-title: "Ch 5 - Linear Regression"
+title: "Linear Regression"
 jupyter: julia-1.9
 ---
 

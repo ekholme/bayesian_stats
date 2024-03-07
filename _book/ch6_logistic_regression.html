@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Notes on Bayesian Stats - 6&nbsp; Ch 6 - Bayesian Logistic Regression</title>
+<title>Notes on Bayesian Stats - 6&nbsp; Bayesian Logistic Regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -147,7 +147,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch6_logistic_regression.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ch 6 - Bayesian Logistic Regression</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch6_logistic_regression.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Bayesian Logistic Regression</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -181,37 +181,37 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch1_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Ch 1 - Intro</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Intro</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch2_beta_binomial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Ch 2 - The Beta Binomial Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Beta Binomial Model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch3_gamma_poisson.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Ch 3 - The Gamma-Poisson Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Gamma-Poisson Model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch4_posterior_simulation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ch 4 - Posterior Simulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Posterior Simulation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch5_linear_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ch 5 - Linear Regression</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Linear Regression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch6_logistic_regression.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ch 6 - Bayesian Logistic Regression</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Bayesian Logistic Regression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -242,7 +242,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ch 6 - Bayesian Logistic Regression</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Bayesian Logistic Regression</span></h1>
 </div>
 
 
@@ -262,7 +262,7 @@ window.Quarto = {
 <p>In this chapter, I’m going to walk through fitting a bayesian logistic regression. This is analogous to the previous chapter where I fit a linear regression, but, uh, it’s a logistic regression.</p>
 <p>Just like in the last chapter, I’m going to use Julia’s <a href="https://turinglang.org">Turing.jl</a> package. This example is drawn (heavily) from <a href="https://storopoli.io/Bayesian-Julia/pages/07_logistic_reg/">Jose Storopoli’s bayesian stats notes</a>.</p>
 <p>First, I’ll load some libraries and read in some data.</p>
-<div id="d765882c" class="cell" data-execution_count="1">
+<div id="d618a7d3" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Turing</span></span>
@@ -363,7 +363,7 @@ window.Quarto = {
 <p>The outcome variable in this dataset is <code>switch</code> – a binary indicator of whether a household switched wells after being informed that the wells they’d been using previously were contaminated.</p>
 <p>So a first step then is to separate the outcome from the rest of the predictors.</p>
 <p><em>Note – it’s best practice to explore the data and do some feature engineering (e.g.&nbsp;z-scoring numeric predictors). But I’m not going to do that here because I don’t really care about the quality of the model in this contrived example.</em></p>
-<div id="c4e2cd78" class="cell" data-execution_count="2">
+<div id="1d0767de" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">select</span>(wells, <span class="fu">Not</span>(<span class="op">:</span>switch)))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> wells.<span class="op">:</span>switch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -404,7 +404,7 @@ window.Quarto = {
 <section id="define-the-model" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="define-the-model"><span class="header-section-number">6.1</span> Define the model</h2>
 <p>Just as we did in the linear regression model, we define a logistic regression using Turin’s <code>@model macro</code>. Once again, this uses pretty weak priors, and each variable gets the same prior here</p>
-<div id="fd3def4f" class="cell" data-execution_count="3">
+<div id="3a0ff1a4" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@model</span> <span class="kw">function</span> <span class="fu">log_reg</span>(X, y)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    n_feat <span class="op">=</span> <span class="fu">size</span>(X, <span class="fl">2</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -435,7 +435,7 @@ window.Quarto = {
 <section id="simulate-the-posterior" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="simulate-the-posterior"><span class="header-section-number">6.2</span> Simulate the Posterior</h2>
 <p>Then we can simulate the posterior just like we did before:</p>
-<div id="a3f9dc88" class="cell" data-execution_count="4">
+<div id="11ea3569" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> <span class="fu">log_reg</span>(X, y)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>chn <span class="op">=</span> <span class="fu">sample</span>(m, <span class="fu">NUTS</span>(), <span class="fu">MCMCThreads</span>(), <span class="fl">1_000</span>, <span class="fl">3</span>);</span>
@@ -450,7 +450,7 @@ window.Quarto = {
 └   ϵ = 0.003125
 ┌ Info: Found initial step size
 └   ϵ = 0.0125
-Sampling (1 threads):  67%|████████████████████         |  ETA: 0:00:02Sampling (1 threads): 100%|█████████████████████████████| Time: 0:00:08</code></pre>
+Sampling (1 threads):  67%|████████████████████         |  ETA: 0:00:02Sampling (1 threads): 100%|█████████████████████████████| Time: 0:00:09</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div class="ansi-escaped-output">
@@ -470,7 +470,7 @@ Sampling (1 threads):  67%|█████████████████�
 <section id="trying-another-version" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="trying-another-version"><span class="header-section-number">6.3</span> Trying another Version</h2>
 <p>Ok, so just to prove that the <code>arraydist(...)</code> term is doing what I think it’s doing in the model above, I’m going to define a second model that’s hopefully equivalent to the first!</p>
-<div id="9ab7f691" class="cell" data-execution_count="5">
+<div id="02c84b46" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@model</span> <span class="kw">function</span> <span class="fu">log_reg2</span>(X, y)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    n_feat <span class="op">=</span> <span class="fu">size</span>(X, <span class="fl">2</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -486,7 +486,7 @@ Sampling (1 threads):  67%|█████████████████�
 <pre><code>log_reg2 (generic function with 2 methods)</code></pre>
 </div>
 </div>
-<div id="e6990362" class="cell" data-execution_count="6">
+<div id="bd4c31c4" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="op">=</span> <span class="fu">log_reg2</span>(X, y)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>chn2 <span class="op">=</span> <span class="fu">sample</span>(m2, <span class="fu">NUTS</span>(), <span class="fu">MCMCThreads</span>(), <span class="fl">1_000</span>, <span class="fl">3</span>);</span>
@@ -501,7 +501,7 @@ Sampling (1 threads):  67%|█████████████████�
 └   ϵ = 0.00625
 ┌ Info: Found initial step size
 └   ϵ = 0.00625
-Sampling (1 threads):  67%|████████████████████         |  ETA: 0:00:04Sampling (1 threads): 100%|█████████████████████████████| Time: 0:00:18</code></pre>
+Sampling (1 threads):  67%|████████████████████         |  ETA: 0:00:04Sampling (1 threads): 100%|█████████████████████████████| Time: 0:00:19</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div class="ansi-escaped-output">
@@ -517,7 +517,7 @@ Sampling (1 threads):  67%|█████████████████�
 </div>
 </div>
 </div>
-<div id="f47b7ef3" class="cell" data-execution_count="7">
+<div id="9d790b47" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">isapprox</span>(<span class="fu">summarize</span>(chn2)[<span class="op">:</span>, <span class="op">:</span>mean], <span class="fu">summarize</span>(chn)[<span class="op">:</span>, <span class="op">:</span>mean], atol<span class="op">=</span><span class="fl">0.01</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>true</code></pre>
@@ -921,8 +921,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a 5="" href="./ch5_linear_regression.html" class="pagination-link  aria-label=" &lt;span="" -="" linear="" regression&lt;="" span&gt;"="">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ch 5 - Linear Regression</span></span>
+      <a href="./ch5_linear_regression.html" class="pagination-link  aria-label=" &lt;span="" regression&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Linear Regression</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

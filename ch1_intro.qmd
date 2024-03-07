@@ -1,17 +1,17 @@
 ---
-title: "Ch 1 - Intro"
+title: "Intro"
 jupyter: julia-1.9
 ---
 
 Basically, Bayesian statistics involves taking some prior beliefs and combining them with data to produce an updated (posterior) set of beliefs. In statistics-world, these beliefs are encoded as distributions (or combinations of distributions).
 
-# Probability
+## Probability
 
 Bayesian and frequentist frameworks tend to differ on what "probability" means. In a Bayesian framework, probability refers to the plausibility of an event. And this tends to be how most people use the term "probability" in informal settings. If we say that the Chiefs have a 90% probability of winning a game vs the Broncos, we're probably using "probability" in the Bayesian sense.
 
 Frequentists, on the other hand, use probability to mean the relative frequency of a given event if it were repeated a lot of times. So in the above example, if this exact Chiefs team played this exact Broncos team in the same conditions 1,000 times, we'd expect them to win 900 of those games.
 
-# Testing Hypotheses
+## Testing Hypotheses
 
 In a Bayesian framework, we ask this question: In light of the observed data, what’s the chance that the hypothesis is correct?
 
@@ -19,7 +19,7 @@ In a frequentist framework, we ask this question: If in fact the hypothesis is i
 
 (note that both of the above are from [Ch 1 of Bayes Rules!](https://www.bayesrulesbook.com/chapter-1#thinking-like-a-bayesian))
 
-# Some Terminology
+## Some Terminology
 
 *Unconditional probability*: $P(Y)$ -- the probability of X (e.g. the probability that an email is spam)
 
@@ -33,7 +33,7 @@ Ordering is also important. Typically $P(Y|X) \neq P(X|Y)$.
 
 *Joint probability*: $P(Y \cap X)$ probabilty of Y **and** X. Assuming X is a binary variable, the total probability of observing Y is: $P(Y) = P(Y \cap X) + P(Y \cap X^c)$, where $X^c$ refers to "not X"
 
-## Probability vs Likelihood
+### Probability vs Likelihood
 
 When B is known, the conditional probability function $P(\cdot|B)$ allows us to compare the probabilities of an unknown event, A or $A^c$, ocurring with B:
 
@@ -45,11 +45,11 @@ $L(B|A)$ vs $L(B^c|A)$.
 
 For example, when Y = y is known, we can use a likelihood function ($L(\cdot |y) = f(y|\cdot)$) to compare the relative likelihood of observing data *y* under possible values of $\pi$ (in a binomial distribution), e.g. ($L(\pi_1 | y)$ vs $L(\pi_2 | y)$).
 
-## Calculating Joint probability
+### Calculating Joint probability
 
 $P(A|B) = \frac{P(A \cap B)}{P(B)}$
 
-# Bayes' Rule
+## Bayes' Rule
 
 For events A and B, the posterior probability of B given A is:
 
@@ -68,7 +68,7 @@ Another way to think about this:
 $f(\pi | y) = \frac{f(\pi)L(\pi|y)}{f(y)}$
 
 
-# Worked example
+## Worked example
 
 ```{julia}
 using RDatasets

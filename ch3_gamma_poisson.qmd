@@ -1,5 +1,5 @@
 ---
-title: "Ch 3 - The Gamma-Poisson Model"
+title: "The Gamma-Poisson Model"
 jupyter: julia-1.9
 ---
 

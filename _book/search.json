@@ -12,241 +12,261 @@
   {
     "objectID": "ch1_intro.html",
     "href": "ch1_intro.html",
-    "title": "1  Ch 1 - Intro",
+    "title": "1  Intro",
     "section": "",
-    "text": "2 Probability\nBayesian and frequentist frameworks tend to differ on what “probability” means. In a Bayesian framework, probability refers to the plausibility of an event. And this tends to be how most people use the term “probability” in informal settings. If we say that the Chiefs have a 90% probability of winning a game vs the Broncos, we’re probably using “probability” in the Bayesian sense.\nFrequentists, on the other hand, use probability to mean the relative frequency of a given event if it were repeated a lot of times. So in the above example, if this exact Chiefs team played this exact Broncos team in the same conditions 1,000 times, we’d expect them to win 900 of those games.",
+    "text": "1.1 Probability\nBayesian and frequentist frameworks tend to differ on what “probability” means. In a Bayesian framework, probability refers to the plausibility of an event. And this tends to be how most people use the term “probability” in informal settings. If we say that the Chiefs have a 90% probability of winning a game vs the Broncos, we’re probably using “probability” in the Bayesian sense.\nFrequentists, on the other hand, use probability to mean the relative frequency of a given event if it were repeated a lot of times. So in the above example, if this exact Chiefs team played this exact Broncos team in the same conditions 1,000 times, we’d expect them to win 900 of those games.",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Ch 1 - Intro</span>"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Intro</span>"
     ]
   },
   {
-    "objectID": "ch1_intro.html#probability-vs-likelihood",
-    "href": "ch1_intro.html#probability-vs-likelihood",
-    "title": "1  Ch 1 - Intro",
-    "section": "4.1 Probability vs Likelihood",
-    "text": "4.1 Probability vs Likelihood\nWhen B is known, the conditional probability function \\(P(\\cdot|B)\\) allows us to compare the probabilities of an unknown event, A or \\(A^c\\), ocurring with B:\n\\(P(A|B)\\) vs \\(P(A^c|B)\\)\nWhen A is known, the likelihood function \\(L(\\cdot|A) = P(A|\\cdot)\\) allows us to evaluate the relative compatibility of data A with events B or \\(B^c\\):\n\\(L(B|A)\\) vs \\(L(B^c|A)\\).\nFor example, when Y = y is known, we can use a likelihood function (\\(L(\\cdot |y) = f(y|\\cdot)\\)) to compare the relative likelihood of observing data y under possible values of \\(\\pi\\) (in a binomial distribution), e.g. (\\(L(\\pi_1 | y)\\) vs \\(L(\\pi_2 | y)\\)).",
+    "objectID": "ch1_intro.html#testing-hypotheses",
+    "href": "ch1_intro.html#testing-hypotheses",
+    "title": "1  Intro",
+    "section": "1.2 Testing Hypotheses",
+    "text": "1.2 Testing Hypotheses\nIn a Bayesian framework, we ask this question: In light of the observed data, what’s the chance that the hypothesis is correct?\nIn a frequentist framework, we ask this question: If in fact the hypothesis is incorrect, what’s the chance I’d have observed this, or even more extreme, data?\n(note that both of the above are from Ch 1 of Bayes Rules!)",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Ch 1 - Intro</span>"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Intro</span>"
     ]
   },
   {
-    "objectID": "ch1_intro.html#calculating-joint-probability",
-    "href": "ch1_intro.html#calculating-joint-probability",
-    "title": "1  Ch 1 - Intro",
-    "section": "4.2 Calculating Joint probability",
-    "text": "4.2 Calculating Joint probability\n\\(P(A|B) = \\frac{P(A \\cap B)}{P(B)}\\)",
+    "objectID": "ch1_intro.html#some-terminology",
+    "href": "ch1_intro.html#some-terminology",
+    "title": "1  Intro",
+    "section": "1.3 Some Terminology",
+    "text": "1.3 Some Terminology\nUnconditional probability: \\(P(Y)\\) – the probability of X (e.g. the probability that an email is spam)\nConditional probability: \\(P(Y|X)\\) – the probability of Y given X (e.g. the probability that an email is spam given that there’s an exclamation mark in the subject line).\nIn some cases, \\(P(Y|X) &gt; P(Y)\\), for example \\(P(orchestra | practice) &gt; P(orchestra)\\), but in other cases, \\(P(Y|X) &lt; P(Y)\\), for example \\(P(flu | wash hands) &lt; P(flu)\\)\nOrdering is also important. Typically \\(P(Y|X) \\neq P(X|Y)\\).\nIndependence: two events are independent if \\(P(Y|X) = P(Y)\\).\nJoint probability: \\(P(Y \\cap X)\\) probabilty of Y and X. Assuming X is a binary variable, the total probability of observing Y is: \\(P(Y) = P(Y \\cap X) + P(Y \\cap X^c)\\), where \\(X^c\\) refers to “not X”\n\n1.3.1 Probability vs Likelihood\nWhen B is known, the conditional probability function \\(P(\\cdot|B)\\) allows us to compare the probabilities of an unknown event, A or \\(A^c\\), ocurring with B:\n\\(P(A|B)\\) vs \\(P(A^c|B)\\)\nWhen A is known, the likelihood function \\(L(\\cdot|A) = P(A|\\cdot)\\) allows us to evaluate the relative compatibility of data A with events B or \\(B^c\\):\n\\(L(B|A)\\) vs \\(L(B^c|A)\\).\nFor example, when Y = y is known, we can use a likelihood function (\\(L(\\cdot |y) = f(y|\\cdot)\\)) to compare the relative likelihood of observing data y under possible values of \\(\\pi\\) (in a binomial distribution), e.g. (\\(L(\\pi_1 | y)\\) vs \\(L(\\pi_2 | y)\\)).\n\n\n1.3.2 Calculating Joint probability\n\\(P(A|B) = \\frac{P(A \\cap B)}{P(B)}\\)",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Ch 1 - Intro</span>"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Intro</span>"
+    ]
+  },
+  {
+    "objectID": "ch1_intro.html#bayes-rule",
+    "href": "ch1_intro.html#bayes-rule",
+    "title": "1  Intro",
+    "section": "1.4 Bayes’ Rule",
+    "text": "1.4 Bayes’ Rule\nFor events A and B, the posterior probability of B given A is:\n\\(P(B|A) = \\frac{P(A \\cap B)}{P(A)} = \\frac{P(B)L(B|A)}{P(A)}\\)\nwhere\n\\(P(A) = P(B)L(B|A) + P(B^c)L(B^c|A)\\)\nor more generally:\n\\(posterior = \\frac{prior \\cdot likelihood}{normalizing constant}\\)\nAnother way to think about this:\n\\(f(\\pi | y) = \\frac{f(\\pi)L(\\pi|y)}{f(y)}\\)",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Intro</span>"
+    ]
+  },
+  {
+    "objectID": "ch1_intro.html#worked-example",
+    "href": "ch1_intro.html#worked-example",
+    "title": "1  Intro",
+    "section": "1.5 Worked example",
+    "text": "1.5 Worked example\n\nusing RDatasets\nusing DataFrames\nusing Statistics\nusing Chain\n\ndefault = dataset(\"ISLR\", \"Default\")\n\n#we'll just use default and student for this\nd = default[:, [:Default, :Student]]\nd.:Default .= d.:Default .== \"Yes\"\nd.:Student .= d.:Student .== \"Yes\"\n\n10000-element BitVector:\n 0\n 1\n 0\n 0\n 0\n 1\n 0\n 1\n 0\n 0\n 1\n 1\n 0\n ⋮\n 0\n 1\n 0\n 0\n 0\n 0\n 1\n 0\n 0\n 0\n 0\n 1\n\n\nlet’s look at the overall probability of default\n\nmean(d.:Default)\n\n0.0333\n\n\nand the overall probability of being a student\n\nmean(d.:Student)\n\n0.2944\n\n\nand the probability of default by student type\n\np_tbl = @chain d begin\n    groupby(:Student)\n    combine(:Default =&gt; mean)\nend\n\n2×2 DataFrame\n\n\n\nRow\nStudent\nDefault_mean\n\n\n\nBool\nFloat64\n\n\n\n\n1\nfalse\n0.029195\n\n\n2\ntrue\n0.0431386\n\n\n\n\n\n\nso, the likelihoods for student types are, \\(L(S|D) = .043\\) and \\(L(S^c|D) = .029\\)\nIf we want to figure out the probability of default for students, we can use:\n\\(P(S|D) = \\frac{P(S)L(S|D)}{P(D)}\\)\n\np_s_d = (mean(d.:Student) * 0.043) / (mean(d.:Default))\n\n0.3801561561561561\n\n\nSo, given this, if we know someone defaults, there’s a 38% probability that they’re a student",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Intro</span>"
     ]
   },
   {
     "objectID": "ch2_beta_binomial.html",
     "href": "ch2_beta_binomial.html",
-    "title": "2  Ch 2 - The Beta Binomial Model",
+    "title": "2  The Beta Binomial Model",
     "section": "",
-    "text": "2.1 Beta Distribution\nThe beta distribution is parameterized by \\(\\alpha, \\beta &gt; 0\\). If a random variable, X, is beta-distributed, we can notate it like so:\n\\(X \\sim Beta(\\alpha, \\beta)\\)\nThe beta distribution can approximate a Normal distribution when \\(\\alpha \\sim \\beta\\) and \\(\\alpha\\) and \\(\\beta\\) &gt;&gt; 1.\nFor example\nusing Distributions\nusing Plots\nusing Random\nusing StatsPlots\n\nd = Beta(4, 4) #alpha = 4, beta = 4\nx = 0:.01:1\n\ny = pdf.(d, x)\n\n101-element Vector{Float64}:\n 0.0\n 0.00013584185999999964\n 0.0010541350399999993\n 0.0034499039399999987\n 0.007927234559999998\n 0.01500406249999997\n 0.025116860159999928\n 0.03862522313999997\n 0.0558163558399999\n 0.07690945625999977\n 0.10205999999999993\n 0.13136392345999992\n 0.1648617062399998\n ⋮\n 0.1313639234599997\n 0.10205999999999983\n 0.07690945625999984\n 0.055816355839999804\n 0.03862522313999984\n 0.025116860160000015\n 0.015004062500000024\n 0.007927234560000012\n 0.003449903940000005\n 0.001054135040000001\n 0.00013584185999999964\n 0.0\nplot(x, y, label=\"Beta(4, 4)\")\nbut the distribution obviously doesn’t have to look like this. We can change the shape by changing alpha and beta\nd2 = Beta(1.5, 4)\n\ny2 = pdf.(d2, x)\n\nplot!(x, y2, label = \"Beta(1.5, 4)\")\nand again\nd3 = Beta(4, 1.5)\n\ny3 = pdf.(d3, x)\n\nplot!(x, y3, label = \"Beta(4, 1.5)\")\nOne of the important things to remember, here, though, is that \\(0 \\le x \\le 1\\)\nWe can also make the beta distribution approximate the uniform distribution if \\(\\alpha = \\beta = 1\\)\nd4 = Beta(1, 1)\n\ny4 = pdf.(d4, x)\n\nplot!(x, y4, label = \"Beta(1,1)\")\nThe flexibility of the beta distribution can make it useful.",
+    "text": "2.1 Beta Distribution\nThe beta distribution is parameterized by \\(\\alpha, \\beta &gt; 0\\). If a random variable, X, is beta-distributed, we can notate it like so:\n\\(X \\sim Beta(\\alpha, \\beta)\\)\nThe beta distribution can approximate a Normal distribution when \\(\\alpha \\sim \\beta\\) and \\(\\alpha\\) and \\(\\beta\\) &gt;&gt; 1.\nFor example\nusing Distributions\nusing Plots\nusing Random\nusing StatsPlots\n\nd = Beta(4, 4) #alpha = 4, beta = 4\nx = 0:0.01:1\n\ny = pdf.(d, x)\n\n101-element Vector{Float64}:\n 0.0\n 0.00013584185999999964\n 0.0010541350399999993\n 0.0034499039399999987\n 0.007927234559999998\n 0.01500406249999997\n 0.025116860159999928\n 0.03862522313999997\n 0.0558163558399999\n 0.07690945625999977\n 0.10205999999999993\n 0.13136392345999992\n 0.1648617062399998\n ⋮\n 0.1313639234599997\n 0.10205999999999983\n 0.07690945625999984\n 0.055816355839999804\n 0.03862522313999984\n 0.025116860160000015\n 0.015004062500000024\n 0.007927234560000012\n 0.003449903940000005\n 0.001054135040000001\n 0.00013584185999999964\n 0.0\nplot(x, y, label=\"Beta(4, 4)\")\nbut the distribution obviously doesn’t have to look like this. We can change the shape by changing alpha and beta\nd2 = Beta(1.5, 4)\n\ny2 = pdf.(d2, x)\n\nplot!(x, y2, label=\"Beta(1.5, 4)\")\nand again\nd3 = Beta(4, 1.5)\n\ny3 = pdf.(d3, x)\n\nplot!(x, y3, label=\"Beta(4, 1.5)\")\nOne of the important things to remember, here, though, is that \\(0 \\le x \\le 1\\)\nWe can also make the beta distribution approximate the uniform distribution if \\(\\alpha = \\beta = 1\\)\nd4 = Beta(1, 1)\n\ny4 = pdf.(d4, x)\n\nplot!(x, y4, label=\"Beta(1,1)\")\nThe flexibility of the beta distribution can make it useful.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ch 2 - The Beta Binomial Model</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Beta Binomial Model</span>"
     ]
   },
   {
     "objectID": "ch2_beta_binomial.html#binomial-distribution",
     "href": "ch2_beta_binomial.html#binomial-distribution",
-    "title": "2  Ch 2 - The Beta Binomial Model",
+    "title": "2  The Beta Binomial Model",
     "section": "2.2 Binomial Distribution",
-    "text": "2.2 Binomial Distribution\nThe binomial distribution is used when Y is a count outcome (e.g. the number of wins in a set of matches). Proportion outcomes are just rescaled count outcomes, so this distribution applies to proportions as well.\n\\(Y|\\pi \\sim Bin(n, \\pi)\\)\nwhere \\(\\pi\\) is the probability of success in a given trial.\nWe can plot this as well\n\nb = Binomial(100, .5) # 100 trials with π = .5\n\nx_bin = 0:1:100\n\ny_bin = pdf.(b, x_bin)\n\nplot(x_bin, y_bin, label=\"Bin(100, .5)\")",
+    "text": "2.2 Binomial Distribution\nThe binomial distribution is used when Y is a count outcome (e.g. the number of wins in a set of matches). Proportion outcomes are just rescaled count outcomes, so this distribution applies to proportions as well.\n\\(Y|\\pi \\sim Bin(n, \\pi)\\)\nwhere \\(\\pi\\) is the probability of success in a given trial.\nWe can plot this as well\n\nb = Binomial(100, 0.5) # 100 trials with π = .5\n\nx_bin = 0:1:100\n\ny_bin = pdf.(b, x_bin)\n\nplot(x_bin, y_bin, label=\"Bin(100, .5)\")",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ch 2 - The Beta Binomial Model</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Beta Binomial Model</span>"
     ]
   },
   {
     "objectID": "ch2_beta_binomial.html#the-beta-binomial-model",
     "href": "ch2_beta_binomial.html#the-beta-binomial-model",
-    "title": "2  Ch 2 - The Beta Binomial Model",
+    "title": "2  The Beta Binomial Model",
     "section": "2.3 The Beta-Binomial Model",
     "text": "2.3 The Beta-Binomial Model\nThe components above are sufficient to describe our Beta-Binomial model:\n\\(Y|\\pi \\sim Bin(n, \\pi)\\) \\(\\pi \\sim Beta(\\alpha, \\beta)\\)",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ch 2 - The Beta Binomial Model</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Beta Binomial Model</span>"
     ]
   },
   {
     "objectID": "ch2_beta_binomial.html#simulate-the-beta-binomial-model",
     "href": "ch2_beta_binomial.html#simulate-the-beta-binomial-model",
-    "title": "2  Ch 2 - The Beta Binomial Model",
+    "title": "2  The Beta Binomial Model",
     "section": "2.4 Simulate the Beta-Binomial model",
     "text": "2.4 Simulate the Beta-Binomial model\nLet’s say we want to predict the proportion of people who support Michelle in an election (basically the probability that she’ll win). We can simulate some data by sampling from the beta and binomial distributions.\nLet’s start by setting up a prior for our values of \\(\\pi\\). If we assume that our Beta distribution is parameterized as Beta(45, 55), we can simulate 1,000 values of \\(\\pi\\) from this distribution.\n\nRandom.seed!(0408)\n\nα = 45\nβ = 55\n\nd = Beta(α, β)\n\nn = 1_000 # sample 1k values\n\npi_sim = rand(d, n)\n\n#plot the distribution of pi values\ndensity(pi_sim)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThen, for each of these 1,000 values of \\(\\pi\\) we’ve simulated, let’s assume we poll 100 people, and the proportion of people who support Michelle follows a Binomial distribution such that Binomial(100, \\(\\pi\\)). We’ll draw one sample from each Binomial distribution (i.e. each value of \\(\\pi\\)), and then we can plot the distribution of our posterior.\n\n#simulate y\ny_sim = vcat(rand.(Binomial.(100, pi_sim), 1)...)\n\ndensity(y_sim)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThis will show us, roughly, how many people (out of 100) we can expect to support Michelle.\nAs a further step, let’s assume our data suggested that the “true” value of y is 50 – i.e. that we conducted a poll and 50 (out of 100) people suggested they’d vote for Michelle. We can see the distribution of \\(\\pi\\) parameter values that produced these outcomes.\n\ninds = findall(x -&gt; x .== 50, y_sim)\n\npi_50 = pi_sim[inds]\n\ndensity(pi_50)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThis would probably be better if we had more values in our sample, but we get the point.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ch 2 - The Beta Binomial Model</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Beta Binomial Model</span>"
     ]
   },
   {
     "objectID": "ch3_gamma_poisson.html",
     "href": "ch3_gamma_poisson.html",
-    "title": "3  Ch 3 - The Gamma-Poisson Model",
+    "title": "3  The Gamma-Poisson Model",
     "section": "",
     "text": "3.1 Gamma Distribution\nThe Gamma Distribution will serve as our prior for \\(\\lambda\\). We can notate this via:\n\\(\\lambda \\sim Gamme(s, r)\\)\nThe Gamma Distribution is parameterized by a shape parameter (s) and a rate parameter (r). These have the constraint that s, r &gt; 0.\nNote that the Exponential Distribution is a special case of the Gamma Distribution where s = 1.\nIn general, these distributions are positive and right-skewed (see this figure, for example).\nTo set an informative prior, we need to choose reasonable values of s and r. If we assume that we receive 5 phone calls in a day, we can estimate s and r using the equation \\(E(\\lambda) = \\frac{s}{r} \\approx 5\\), so we know that \\(s = 5r\\). We can then plot some distributions that satisfy this and choose some values.\nNote that the Distributions.jl package parameterizes the Gamma distribution with shape (s, \\(\\alpha\\)) and a scale parameter (\\(\\theta\\)), which is the inverse of the rate (r, \\(\\beta\\)) parameter (i.e. \\(\\beta = 1 / \\theta\\))\nr = 1:4\nθ = 1 ./ r\ns = 5 .* r\n\ngammas = Gamma.(s, θ)\n\nplots = []\nfor Γ in gammas\n    α = Γ.α\n    θ = round(Γ.θ, digits=2)\n    y = rand(Γ, 10_000)\n    p = density(y, label=\"α = $α; θ = $θ\")\n    push!(plots, p)\nend\n\nplot!(plots...)",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Ch 3 - The Gamma-Poisson Model</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>The Gamma-Poisson Model</span>"
     ]
   },
   {
     "objectID": "ch3_gamma_poisson.html#the-gamma-poisson-model",
     "href": "ch3_gamma_poisson.html#the-gamma-poisson-model",
-    "title": "3  Ch 3 - The Gamma-Poisson Model",
+    "title": "3  The Gamma-Poisson Model",
     "section": "3.2 The Gamma-Poisson Model",
     "text": "3.2 The Gamma-Poisson Model\nGiven the above, the Gamma-Poisson model is described as:\n\\(Y_i|\\lambda \\sim Pois(\\lambda)\\) \\(\\lambda \\sim Gamma(s, r)\\)",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Ch 3 - The Gamma-Poisson Model</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>The Gamma-Poisson Model</span>"
     ]
   },
   {
     "objectID": "ch4_posterior_simulation.html",
     "href": "ch4_posterior_simulation.html",
-    "title": "4  Ch 4 - Posterior Simulation",
+    "title": "4  Posterior Simulation",
     "section": "",
     "text": "4.1 Grid approximation\nImagine we have the following beta-binomial model:\n\\(Y|\\pi \\sim Bin(10, \\pi)\\) \\(\\pi \\sim Beta(2, 2)\\)\nwhere Y is the number of successes in 10 independent trials. Each trial has probability \\(\\pi\\) of succeeding. Imagine that we observe Y = 9 successes.\nAlthough we can specify the posterior analytically, we can also approximate it with grid approximation.\nusing Distributions\nusing Plots\nusing Random\nusing StatsPlots\nusing StatsBase\n\nRandom.seed!(0408)\n\n#vector of potential pi values\npi_grid = 0:0.1:1\n\n#prior beta distribution\nd_beta = Beta(2, 2)\n\nBeta{Float64}(α=2.0, β=2.0)\n#evaluate the pdf at each value of pi\npriors = pdf.(d_beta, pi_grid)\n\n#calculate the likelihood at each value of pi\nlikelihoodz = pdf.(Binomial.(10, pi_grid), 9)\n\n#compute the un-normalized posterior\nun_normalized = likelihoodz .* priors\n\n#normalize the posterior\nposteriorz = un_normalized ./ sum(un_normalized)\n\n11-element Vector{Float64}:\n 0.0\n 6.99703248673802e-9\n 5.661203963590892e-6\n 0.00024994099745876834\n 0.0032608534830283545\n 0.02108962820317927\n 0.08357210821151959\n 0.2196098326613785\n 0.3710126629578925\n 0.30119930528454697\n 0.0\nAnd then we can plot the resulting grid-approximated posterior\nplot(pi_grid, posteriorz)\nscatter!(pi_grid, posteriorz)\nOf course, if our pi_grid contains more closely-spaced values, the approximated posterior becomes smoother:\npi2 = 0:0.01:1\nprior2 = pdf.(d_beta, pi2)\n\n#calculate the likelihood at each value of pi\nlikelihood2 = pdf.(Binomial.(10, pi2), 9)\n\n#compute the un-normalized posterior\nun_normalized2 = likelihood2 .* prior2\n\n#normalize the posterior\nposterior2 = un_normalized2 ./ sum(un_normalized2)\n\nplot(pi2, posterior2)\nscatter!(pi2, posterior2)\nWe can add the true resulting distribution – a Beta(11, 3) distribution – to this to show the approximation vs the true value:\ns = sample(pi2, Weights(posterior2), 100_000)\n\ndensity(s, label=\"Approximate Posterior\")\n\ntrue_beta = Beta(11, 3)\nys = pdf.(true_beta, pi2)\nplot!(pi2, ys, label=\"True Beta(11,3)\")\nOne issue with grid approximation is that it quickly becomes intractable with many parameters – it is difficult to get a dense enough grid to get a good approximation as you start adding parameters.\nSo here’s MCMC to the rescue!",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Ch 4 - Posterior Simulation</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Posterior Simulation</span>"
     ]
   },
   {
     "objectID": "ch4_posterior_simulation.html#mcmc",
     "href": "ch4_posterior_simulation.html#mcmc",
-    "title": "4  Ch 4 - Posterior Simulation",
+    "title": "4  Posterior Simulation",
     "section": "4.2 MCMC",
     "text": "4.2 MCMC\nLike grid approximation models, MCMC samples are approximations.\nUnlike grid approximation samples, though, MCMC samples are not independent. For \\({\\theta^1, \\theta^2, ..., \\theta^N}\\), each \\(\\theta^{(i+1)}\\) is conditional on \\(\\theta^i\\). Or:\n\\(f(\\theta^{(i+1)} | \\theta^i, y)\\)",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Ch 4 - Posterior Simulation</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Posterior Simulation</span>"
     ]
   },
   {
     "objectID": "ch4_posterior_simulation.html#metropolis-hastings-algorithm",
     "href": "ch4_posterior_simulation.html#metropolis-hastings-algorithm",
-    "title": "4  Ch 4 - Posterior Simulation",
+    "title": "4  Posterior Simulation",
     "section": "4.3 Metropolis-Hastings algorithm",
     "text": "4.3 Metropolis-Hastings algorithm\nThe Metropolis-Hastings algo is a 2-step process for approximating a posterior distribution:\n\nPropose a new “location” in the theoretical posterior;\nDecide whether or not to go there.\n\nTo unpack this a little bit:\nStep 1: Propose a new location\nWe don’t know the posterior we’re drawing from, but we can use a “proposal model” to draw new locations from. We can use different distributions, but the Uniform distribution is the most straightforward. Assume we have a current location, \\(x\\), and bandwidth, \\(w\\), then our proposed new location, \\(x'\\), is:\n\\(x'|x \\sim Unif(x - w, x + w)\\)\nStep 2: Decide whether or not to go there\nWe have to calculate the acceptance probability (the probability of accepting \\(x'\\)).\nIf the unnormalized posterior plausibility of the proposed location \\(x'\\) is greather than that of the current location \\(x\\) (i.e. \\(f(x')L(x'|y) &gt; f(x)L(x|y)\\)), definitely go to \\(x'\\).\nOtherwise, maybe go to \\(x'\\). This feature (maybe moving even if the proposed location is less likely than the current location) prevents the chain from getting stuck.\nWe can define the acceptance probability as:\n\\[\\alpha = min\\{1, \\frac{f(x')L(x'|y)}{f(x)L(x|y)} \\frac{q(x|x')}{q(x'|x)}\\}\\]\nIf we use a symmetric proposal model (like the Uniform distribution), then this simplifies to:\n\\[\\alpha = min\\{1, \\frac{f(x')L(x'|y)}{f(x)L(x|y)}\\}\\]\nThis can further simplify to:\n\\[\\alpha = min\\{1, \\frac{f(x'|y)}{f(x|y)}\\}\\]\nGiven this, in scenario 1, if \\(f(x'|y) \\ge f(x|y)\\), then $alpha = 1 $, and we will definitely move to \\(x'\\)\nOtherwise, if \\(\\alpha = \\frac{f(x'|y)}{f(x|y)} \\lt 1\\), then we might move there with probability \\(\\alpha\\)\n\n4.3.1 example\nImagine we have a Normal-Normal model such that:\n\\(Y|\\mu \\sim N(\\mu, 0.75^2)\\)\n\\(\\mu \\sim N(0, 1^2)\\)\ni.e. Y is a numerical outcome that varies normally around \\(\\mu\\) with standard deviation 0.75\nThen imagine we observe an outcome Y = 6.25. Given this, and the above, we can calculate the posterior model as:\n\\(\\mu | (Y = 6.25) \\sim N(4, 0.6^2)\\)\nWe can run through one iteration of the Metropolis-Hastings algorithm with the following, where w is the bandwidth of our Uniform proposal model and current is the current value on the chain:\n\nfunction one_mh_iter(w, current)\n    c = Float64(current)\n    u = Uniform(current - w, current + w)\n    proposal = rand(u, 1)[1]\n\n    #proposal_plaus = prior * likelihood\n    proposal_plaus = pdf(Normal(0, 1), proposal) * pdf(Normal(proposal, 0.75), 6.25)\n\n    #current_plaus = prior * likelihood\n    current_plaus = pdf(Normal(0, 1), current) * pdf(Normal(current, 0.75), 6.25)\n\n    α = minimum([1, proposal_plaus / current_plaus])\n\n    next = sample([proposal, c], Weights([α, 1 - α]), 1)[1]\n\n    return next\nend\n\none_mh_iter (generic function with 1 method)\n\n\n\nres = one_mh_iter(1, 4)\n\n4.0\n\n\nAnd then from there, we can use the logic in the one_mh_iter function to take a “tour” and create an entire chain, which will be our simulated distribution.\n\nfunction mh_tour(w, current, N::Int)\n    μ = Vector{Float64}(undef, N)\n\n    for i ∈ eachindex(μ)\n        r = one_mh_iter(w, current)\n        μ[i] = r\n        current = r\n    end\n    return μ\nend\n\nmh_tour (generic function with 1 method)\n\n\n\nres = mh_tour(1, 4, 10_000)\n\n10000-element Vector{Float64}:\n 4.0\n 4.106609027850608\n 4.235886932047645\n 3.310894252707528\n 4.034179768273493\n 4.512960695766677\n 4.512960695766677\n 4.349575562580946\n 4.101991567803039\n 3.460601626178285\n 3.633816936072791\n 4.30401065365775\n 3.401923900064334\n ⋮\n 3.934350716176937\n 3.934350716176937\n 3.66719175153303\n 3.9773404547954994\n 3.7463512503491367\n 4.521828790801184\n 4.521828790801184\n 4.492908196169627\n 3.8668258667074396\n 3.8668258667074396\n 3.8668258667074396\n 3.8668258667074396\n\n\nand we can look at the trace plot and the histogram to see the distribution we’ve simulated:\n\np1 = plot(res, label=\"\");\np2 = histogram(res);\n\nplot(p1, p2, layout=@layout([a b]))\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAnd now let’s check out work – we should get approximately \\(\\mu = 4\\) and \\(\\sigma = 0.6\\)\n\n[mean(res), std(res)]\n\n2-element Vector{Float64}:\n 3.974150267286955\n 0.6134780589942376",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Ch 4 - Posterior Simulation</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Posterior Simulation</span>"
     ]
   },
   {
     "objectID": "ch4_posterior_simulation.html#other-algorithms",
     "href": "ch4_posterior_simulation.html#other-algorithms",
-    "title": "4  Ch 4 - Posterior Simulation",
+    "title": "4  Posterior Simulation",
     "section": "4.4 Other Algorithms",
     "text": "4.4 Other Algorithms\nMetropolis-Hastings is the fundamental MCMC algorithm, but it’s often not the one used in applications today. Other algorithms, such as the Gibbs algorithm or the Hamiltonian Monte Carlo (HMC) algorithm are more common, with HMC being the algorithm used by the {rstan} package.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Ch 4 - Posterior Simulation</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Posterior Simulation</span>"
     ]
   },
   {
     "objectID": "ch5_linear_regression.html",
     "href": "ch5_linear_regression.html",
-    "title": "5  Ch 5 - Linear Regression",
+    "title": "5  Linear Regression",
     "section": "",
     "text": "5.1 Generate Fake Data\nI’ll generate some fake data to use as an example.\nn = 1000\n\n𝐗 = randn(n, 3)\n\nβ = [1.0, 2.0, 3.0]\n\nf(x) = 0.5 .+ x * β\n\nϵ = rand(Normal(0, 1.0), n)\n\ny = f(𝐗) + ϵ;\nHere’s what we’re modeling:\n\\(Y_i \\sim N(\\alpha + \\beta^T \\bf X_i, \\sigma^2)\\)\nIn words, \\(Y_i\\) is normally distributed with an expected value of the output of a typical linear model and a variance of \\(\\sigma^2\\).",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear Regression</span>"
     ]
   },
   {
     "objectID": "ch5_linear_regression.html#define-model",
     "href": "ch5_linear_regression.html#define-model",
-    "title": "5  Ch 5 - Linear Regression",
+    "title": "5  Linear Regression",
     "section": "5.2 Define Model",
     "text": "5.2 Define Model\nNext, we can use Turing’s @model macro to define our model. One important part of defining our model is setting priors.\nIn this model, I’m going to use pretty weak priors, and I’m going to use these same priors for all of the variables.\n\n@model function lin_reg(x, y)\n    n_feat = size(x, 2)\n\n    #priors\n    α ~ Normal(0, 2)\n    b ~ MvNormal(zeros(n_feat), 3.0 * I)\n    σ ~ Exponential(1)\n\n    #estimate the likelihood\n    for i ∈ eachindex(y)\n        y[i] ~ Normal(α + x[i, :]' * b, σ)\n    end\n\n    #alternatively:\n    # μ = α .+ x * b\n    # return y ~ MvNormal(μ, σ * I)\nend\n\nlin_reg (generic function with 2 methods)\n\n\nIn math notation, our model is:\n\\(Y_i | \\alpha, \\beta, \\sigma \\sim N(\\alpha + \\bf X_i ' \\beta, \\sigma^2)\\)\n\\(\\alpha \\sim N(0, 2)\\)\n\\(\\beta \\sim N(\\mu, \\Sigma)\\)\nwhere \\(\\mu\\) is a length-3 zero-vector and \\(\\Sigma\\) is a diagonal matrix with 3s on the diagonal\n\\(\\sigma \\sim Exp(1)\\)",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear Regression</span>"
     ]
   },
   {
     "objectID": "ch5_linear_regression.html#simulate-the-posterior",
     "href": "ch5_linear_regression.html#simulate-the-posterior",
-    "title": "5  Ch 5 - Linear Regression",
+    "title": "5  Linear Regression",
     "section": "5.3 Simulate the Posterior",
     "text": "5.3 Simulate the Posterior\nOk so now we have this model set up, which is what a fairly typical linear regression model might look like, and now we need to simulate the posterior. We can do that in Turing as follows:\n\nmodel = lin_reg(𝐗, y)\n\nchn = sample(model, NUTS(), MCMCThreads(), 5_000, 2);\n\n┌ Warning: Only a single thread available: MCMC chains are not sampled in parallel\n└ @ AbstractMCMC C:\\Users\\eric_ekholm\\.julia\\packages\\AbstractMCMC\\Es490\\src\\sample.jl:307\n┌ Info: Found initial step size\n└   ϵ = 0.0125\n┌ Info: Found initial step size\n└   ϵ = 0.003125\n\n\nAnd we can check the trace plot and the posterior distributions:\n\nplot(chn)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThese plots give some useful diagnostics. The trace plots show how the chains (in blue and yellow) are moving around the range of posterior plausible values for each parameter, and the distributions show the posterior distributions for each parameter. Since we know the true values for these parameters, we can see that simulations are producing posteriors representative of the ground truth.",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear Regression</span>"
     ]
   },
   {
     "objectID": "ch5_linear_regression.html#extract-information-from-posterior",
     "href": "ch5_linear_regression.html#extract-information-from-posterior",
-    "title": "5  Ch 5 - Linear Regression",
+    "title": "5  Linear Regression",
     "section": "5.4 Extract Information from Posterior",
     "text": "5.4 Extract Information from Posterior\nWe can also extract summary information from our simulation. We might care about the parameter means (we probably also care about their distributions, but more on that next) and other diagnostics, which we can access via summarize().\n\nsummarize(chn)\n\n\n  parameters      mean       std      mcse     ess_bulk    ess_tail      rhat  ⋯\n      Symbol   Float64   Float64   Float64      Float64     Float64   Float64  ⋯\n           α    0.4714    0.0321    0.0002   20468.4832   7346.0489    1.0000  ⋯\n        b[1]    1.0320    0.0320    0.0002   17505.5390   7545.8046    0.9999  ⋯\n        b[2]    2.0087    0.0322    0.0002   17638.6378   8224.9626    1.0000  ⋯\n        b[3]    3.0360    0.0319    0.0002   21294.1279   7880.1851    1.0002  ⋯\n           σ    1.0221    0.0228    0.0002   21911.5011   7597.6585    1.0000  ⋯\n                                                                1 column omitted\n\n\n\n\nIn addition to providing parameter means, this function also gives us the rhat values for each parameter. rhat describes the ratio of the variability across all chains to the variability within any individual chain. We want this to be approximately 1, and values greater than like 1.05 might be concerning.\nNote that the formula here is:\n\\(\\hat{R} \\approx \\sqrt{\\frac{V_{combined}}{V_{within}}}\\)\nAnother thing we might want to do is extract quantiles from our chain. In a Bayesian context, we probably care more about quantiles/distributions than just parameter means, otherwise like why bother to adopt a Bayesian approach at all?\n\nquantile(chn)\n\n\nQuantiles\n  parameters      2.5%     25.0%     50.0%     75.0%     97.5% \n      Symbol   Float64   Float64   Float64   Float64   Float64 \n           α    0.4080    0.4497    0.4715    0.4932    0.5344\n        b[1]    0.9689    1.0104    1.0320    1.0534    1.0941\n        b[2]    1.9464    1.9867    2.0087    2.0305    2.0720\n        b[3]    2.9739    3.0143    3.0362    3.0575    3.0980\n           σ    0.9785    1.0065    1.0219    1.0372    1.0678\n\n\n\n\nBy default, quantile() provides the 2.5%, 25%, 50%, 75%, and 97.5% percentiles. If we wanted, for example, 80% confidence for each parameter, we could supply this:\n\nquantile(chn; q=[0.1, 0.9])\n\n\nQuantiles\n  parameters     10.0%     90.0% \n      Symbol   Float64   Float64 \n           α    0.4302    0.5125\n        b[1]    0.9906    1.0729\n        b[2]    1.9673    2.0502\n        b[3]    2.9956    3.0773\n           σ    0.9932    1.0514\n\n\n\n\nand if we wanted to get the quantiles for each chain separately:\n\nqs = quantile(chn; q=[0.1, 0.9], append_chains=false)\n\n#and let's look at just the first one\nqs[1]\n\n\nQuantiles (Chain 1)\n  parameters     10.0%     90.0% \n      Symbol   Float64   Float64 \n           α    0.4303    0.5125\n        b[1]    0.9922    1.0733\n        b[2]    1.9676    2.0502\n        b[3]    2.9955    3.0778\n           σ    0.9937    1.0510",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear Regression</span>"
     ]
   },
   {
     "objectID": "ch5_linear_regression.html#predicting-y",
     "href": "ch5_linear_regression.html#predicting-y",
-    "title": "5  Ch 5 - Linear Regression",
+    "title": "5  Linear Regression",
     "section": "5.5 Predicting Y",
     "text": "5.5 Predicting Y\nSo, probably obvious, but another thing we’re probably interested in doing is predicting our outcome. In a Bayesian framework, though, these predictions won’t be a single value – they’ll be distributions. Or, rather, simulated/approximate distributions.\nThe way this works is that, for each observation of \\(y\\), we’ll get \\(j\\) predictions, where \\(j\\) is the number of parameter sets across the chains. Since we have 2 chains, each with 5,000 iterations here, we’ll get 10,000 predictions for each observation of \\(y\\) here.\nIn notation:\n\\(Y_i | \\alpha^j, \\beta^j, \\sigma^j \\sim N(\\alpha^j + \\bf X_i ' \\beta^j, \\sigma{^j}^2)\\)\nwhere \\(j\\) is a given parameter set.\nSo in our current case, where we have 1,000 observations of \\(y\\) and 2 length-5,000 chains, we will have \\(1,000*2*5,000 = 10,000,000\\) predicted values.\nIn Turing, we can get those like so:\n\nŷ = Vector{Union{Missing,Float64}}(undef, length(y))\n\npreds = predict(lin_reg(𝐗, ŷ), chn);\n\nNow, if we want to extract predictions for just our first observation (y1) and plot the distribution of predictions, we can do:\n\ny1 = getindex(preds, \"y[1]\")\n\ndensity(y1.data)\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAnd we can get the mean prediction for each observation in the data if we want:\n\nmean_preds = summarize(preds)[:, :mean]\n\n1000-element Vector{Float64}:\n  5.7006268396886695\n -1.0506371972638873\n -3.1732895813657738\n  4.5049520173210675\n  2.6660448198513644\n -1.2911138975566685\n  2.3099148855543086\n  1.1421499549064436\n  0.37195589822577046\n  6.828458164221361\n -3.8660133764191005\n  0.48796232003761836\n  2.3802240108862707\n  ⋮\n -3.75015072568158\n  0.7680897886182543\n -3.628382116045487\n -1.0757865278055503\n  0.8049089018586542\n  4.32923063569182\n  1.8837023355657638\n  1.0491657806017156\n -7.241138183105443\n -6.315218508659162\n -7.767339811205812\n  0.7141600320377279",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear Regression</span>"
     ]
   },
   {
     "objectID": "ch5_linear_regression.html#compare-to-ols",
     "href": "ch5_linear_regression.html#compare-to-ols",
-    "title": "5  Ch 5 - Linear Regression",
+    "title": "5  Linear Regression",
     "section": "5.6 Compare to OLS",
     "text": "5.6 Compare to OLS\nSince we simulated our data, we know what our true parameter values are, and so we can just kinda look at the parameter estimates from the Bayesian framework and see that they’re very close to the true values. But it could also be instructive to compare the parameter estimates – and the predicted values – to those we get from OLS.\nSo let’s first get our mean parameter estimates from the Bayesian framework:\n\nbayes_coefs = summarize(chn)[:, :mean]\n\n5-element Vector{Float64}:\n 0.47143324916301155\n 1.0319528048099806\n 2.008675224648713\n 3.036046413382201\n 1.0221377365466682\n\n\nThen we can get our OLS coefficients using Julia’s linear solver notation (we could also use the GLM package).\n\nols_coefs = hcat(ones(length(y)), 𝐗) \\ y\n\n4-element Vector{Float64}:\n 0.4714517742708525\n 1.0324877848634773\n 2.0094769140167044\n 3.03674656413514\n\n\nAnd we can see that they’re basically the same with the isapprox() function.\n\nisapprox(ols_coefs, bayes_coefs[1:4], atol=0.01)\n\ntrue\n\n\nFinally, let’s say we wanted to compare the predictions of the Bayesian model to those of the OLS model. We can calculate the mean squared error for each.\nWe don’t really need to do this, since if the parameters are essentially the same, we know the model predictions will also be essentially the same, but it’s easy to do so whatever.\n\nŷ_ols = hcat(ones(length(y)), 𝐗) * ols_coefs;\n\nŷ_bayes = summarize(preds)[:, :mean];\n\nfunction mse(y, ŷ)\n    return sum((y .- ŷ) .^ 2) / length(y)\nend\n\nmse (generic function with 1 method)\n\n\n\nmse_ols = round(mse(y, ŷ_ols), digits=2);\nmse_bayes = round(mse(y, ŷ_bayes), digits=2);\n\nprint(\"OLS loss: $mse_ols \\nBayes loss: $mse_bayes\")\n\nOLS loss: 1.04 \nBayes loss: 1.04\n\n\nSo there we go – the whole process of fitting a Bayesian linear regression!",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Ch 5 - Linear Regression</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Linear Regression</span>"
     ]
   },
   {
     "objectID": "ch6_logistic_regression.html",
     "href": "ch6_logistic_regression.html",
-    "title": "6  Ch 6 - Bayesian Logistic Regression",
+    "title": "6  Bayesian Logistic Regression",
     "section": "",
     "text": "6.1 Define the model\nJust as we did in the linear regression model, we define a logistic regression using Turin’s @model macro. Once again, this uses pretty weak priors, and each variable gets the same prior here\n@model function log_reg(X, y)\n    n_feat = size(X, 2)\n\n    #priors\n    α ~ Normal(0, 3)\n    β ~ filldist(TDist(3), n_feat)\n\n    #likelihood\n    return y ~ arraydist(LazyArray(@~ BernoulliLogit.(α .+ X * β)))\nend\n\nlog_reg (generic function with 2 methods)\nIn notation:\n\\(y \\sim Bernoulli(p)\\)\n\\(p \\sim Logistic(\\alpha + \\bf X \\cdot \\beta)\\)\n\\(\\alpha \\sim N(0, 3)\\)\n\\(\\beta_j \\sim t(0, 1, 3)\\) for j in \\(\\{\\beta_1, ..., \\beta_j\\}\\)\nAlso – the model specification above comes from Jose Storopoli’s code, and there are a few little wrinkles I didn’t quite understand at first:",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Ch 6 - Bayesian Logistic Regression</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bayesian Logistic Regression</span>"
     ]
   },
   {
     "objectID": "ch6_logistic_regression.html#define-the-model",
     "href": "ch6_logistic_regression.html#define-the-model",
-    "title": "6  Ch 6 - Bayesian Logistic Regression",
+    "title": "6  Bayesian Logistic Regression",
     "section": "",
     "text": "filldist()is basically a loop to make the same distribution multiple times. So for example, it will create n_feat identical distributions (T distributions with 3 degrees of freedom);\narraydist() is similar to filldist(), but it is a wrapper for an array of distributions that aren’t necessarily the same.\nAs far as I can tell, LazyArray() and @~ provide ways to specify lazy computations, which make the operations faster and more efficient.\nBernoulliLogit() is a cool way to combine the Logistic() and Bernoulli() functions.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Ch 6 - Bayesian Logistic Regression</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bayesian Logistic Regression</span>"
     ]
   },
   {
     "objectID": "ch6_logistic_regression.html#simulate-the-posterior",
     "href": "ch6_logistic_regression.html#simulate-the-posterior",
-    "title": "6  Ch 6 - Bayesian Logistic Regression",
+    "title": "6  Bayesian Logistic Regression",
     "section": "6.2 Simulate the Posterior",
-    "text": "6.2 Simulate the Posterior\nThen we can simulate the posterior just like we did before:\n\nm = log_reg(X, y)\n\nchn = sample(m, NUTS(), MCMCThreads(), 1_000, 3);\n\nsummarize(chn)\n\n┌ Warning: Only a single thread available: MCMC chains are not sampled in parallel\n└ @ AbstractMCMC C:\\Users\\eric_ekholm\\.julia\\packages\\AbstractMCMC\\Es490\\src\\sample.jl:307\n┌ Info: Found initial step size\n└   ϵ = 0.003125\n┌ Info: Found initial step size\n└   ϵ = 0.003125\n┌ Info: Found initial step size\n└   ϵ = 0.0125\nSampling (1 threads):  67%|████████████████████         |  ETA: 0:00:02Sampling (1 threads): 100%|█████████████████████████████| Time: 0:00:08\n\n\n\n  parameters      mean       std      mcse    ess_bulk    ess_tail      rhat   ⋯\n      Symbol   Float64   Float64   Float64     Float64     Float64   Float64   ⋯\n           α   -0.1551    0.0994    0.0028   1256.7607   1606.9207    1.0026   ⋯\n        β[1]    0.4671    0.0408    0.0011   1371.1125   1734.0509    1.0030   ⋯\n        β[2]   -0.0090    0.0011    0.0000   3094.1331   2249.2855    1.0008   ⋯\n        β[3]   -0.1230    0.0750    0.0018   1673.0766   1576.0275    1.0006   ⋯\n        β[4]    0.0423    0.0096    0.0002   1800.2146   1864.5301    1.0015   ⋯\n                                                                1 column omitted",
+    "text": "6.2 Simulate the Posterior\nThen we can simulate the posterior just like we did before:\n\nm = log_reg(X, y)\n\nchn = sample(m, NUTS(), MCMCThreads(), 1_000, 3);\n\nsummarize(chn)\n\n┌ Warning: Only a single thread available: MCMC chains are not sampled in parallel\n└ @ AbstractMCMC C:\\Users\\eric_ekholm\\.julia\\packages\\AbstractMCMC\\Es490\\src\\sample.jl:307\n┌ Info: Found initial step size\n└   ϵ = 0.003125\n┌ Info: Found initial step size\n└   ϵ = 0.003125\n┌ Info: Found initial step size\n└   ϵ = 0.0125\nSampling (1 threads):  67%|████████████████████         |  ETA: 0:00:02Sampling (1 threads): 100%|█████████████████████████████| Time: 0:00:09\n\n\n\n  parameters      mean       std      mcse    ess_bulk    ess_tail      rhat   ⋯\n      Symbol   Float64   Float64   Float64     Float64     Float64   Float64   ⋯\n           α   -0.1551    0.0994    0.0028   1256.7607   1606.9207    1.0026   ⋯\n        β[1]    0.4671    0.0408    0.0011   1371.1125   1734.0509    1.0030   ⋯\n        β[2]   -0.0090    0.0011    0.0000   3094.1331   2249.2855    1.0008   ⋯\n        β[3]   -0.1230    0.0750    0.0018   1673.0766   1576.0275    1.0006   ⋯\n        β[4]    0.0423    0.0096    0.0002   1800.2146   1864.5301    1.0015   ⋯\n                                                                1 column omitted",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Ch 6 - Bayesian Logistic Regression</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bayesian Logistic Regression</span>"
     ]
   },
   {
     "objectID": "ch6_logistic_regression.html#trying-another-version",
     "href": "ch6_logistic_regression.html#trying-another-version",
-    "title": "6  Ch 6 - Bayesian Logistic Regression",
+    "title": "6  Bayesian Logistic Regression",
     "section": "6.3 Trying another Version",
-    "text": "6.3 Trying another Version\nOk, so just to prove that the arraydist(...) term is doing what I think it’s doing in the model above, I’m going to define a second model that’s hopefully equivalent to the first!\n\n@model function log_reg2(X, y)\n    n_feat = size(X, 2)\n\n    #priors\n    α ~ Normal(0, 3)\n    β ~ filldist(TDist(3), n_feat)\n\n    for i ∈ eachindex(y)\n        y[i] ~ BernoulliLogit(α + X[i, :]' * β)\n    end\nend\n\nlog_reg2 (generic function with 2 methods)\n\n\n\nm2 = log_reg2(X, y)\n\nchn2 = sample(m2, NUTS(), MCMCThreads(), 1_000, 3);\n\nsummarize(chn2)\n\n┌ Warning: Only a single thread available: MCMC chains are not sampled in parallel\n└ @ AbstractMCMC C:\\Users\\eric_ekholm\\.julia\\packages\\AbstractMCMC\\Es490\\src\\sample.jl:307\n┌ Info: Found initial step size\n└   ϵ = 0.0015625\n┌ Info: Found initial step size\n└   ϵ = 0.00625\n┌ Info: Found initial step size\n└   ϵ = 0.00625\nSampling (1 threads):  67%|████████████████████         |  ETA: 0:00:04Sampling (1 threads): 100%|█████████████████████████████| Time: 0:00:18\n\n\n\n  parameters      mean       std      mcse    ess_bulk    ess_tail      rhat   ⋯\n      Symbol   Float64   Float64   Float64     Float64     Float64   Float64   ⋯\n           α   -0.1574    0.0988    0.0028   1292.1404   1714.7255    1.0039   ⋯\n        β[1]    0.4661    0.0414    0.0011   1505.7384   1585.0674    1.0012   ⋯\n        β[2]   -0.0090    0.0010    0.0000   3255.5574   2392.8436    1.0014   ⋯\n        β[3]   -0.1216    0.0772    0.0019   1568.5344   1852.0284    1.0008   ⋯\n        β[4]    0.0427    0.0100    0.0002   1702.9298   1573.2741    1.0022   ⋯\n                                                                1 column omitted\n\n\n\n\n\nisapprox(summarize(chn2)[:, :mean], summarize(chn)[:, :mean], atol=0.01)\n\ntrue",
+    "text": "6.3 Trying another Version\nOk, so just to prove that the arraydist(...) term is doing what I think it’s doing in the model above, I’m going to define a second model that’s hopefully equivalent to the first!\n\n@model function log_reg2(X, y)\n    n_feat = size(X, 2)\n\n    #priors\n    α ~ Normal(0, 3)\n    β ~ filldist(TDist(3), n_feat)\n\n    for i ∈ eachindex(y)\n        y[i] ~ BernoulliLogit(α + X[i, :]' * β)\n    end\nend\n\nlog_reg2 (generic function with 2 methods)\n\n\n\nm2 = log_reg2(X, y)\n\nchn2 = sample(m2, NUTS(), MCMCThreads(), 1_000, 3);\n\nsummarize(chn2)\n\n┌ Warning: Only a single thread available: MCMC chains are not sampled in parallel\n└ @ AbstractMCMC C:\\Users\\eric_ekholm\\.julia\\packages\\AbstractMCMC\\Es490\\src\\sample.jl:307\n┌ Info: Found initial step size\n└   ϵ = 0.0015625\n┌ Info: Found initial step size\n└   ϵ = 0.00625\n┌ Info: Found initial step size\n└   ϵ = 0.00625\nSampling (1 threads):  67%|████████████████████         |  ETA: 0:00:04Sampling (1 threads): 100%|█████████████████████████████| Time: 0:00:19\n\n\n\n  parameters      mean       std      mcse    ess_bulk    ess_tail      rhat   ⋯\n      Symbol   Float64   Float64   Float64     Float64     Float64   Float64   ⋯\n           α   -0.1574    0.0988    0.0028   1292.1404   1714.7255    1.0039   ⋯\n        β[1]    0.4661    0.0414    0.0011   1505.7384   1585.0674    1.0012   ⋯\n        β[2]   -0.0090    0.0010    0.0000   3255.5574   2392.8436    1.0014   ⋯\n        β[3]   -0.1216    0.0772    0.0019   1568.5344   1852.0284    1.0008   ⋯\n        β[4]    0.0427    0.0100    0.0002   1702.9298   1573.2741    1.0022   ⋯\n                                                                1 column omitted\n\n\n\n\n\nisapprox(summarize(chn2)[:, :mean], summarize(chn)[:, :mean], atol=0.01)\n\ntrue",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Ch 6 - Bayesian Logistic Regression</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bayesian Logistic Regression</span>"
     ]
   },
   {
     "objectID": "ch6_logistic_regression.html#extracting-predicting-etc",
     "href": "ch6_logistic_regression.html#extracting-predicting-etc",
-    "title": "6  Ch 6 - Bayesian Logistic Regression",
+    "title": "6  Bayesian Logistic Regression",
     "section": "6.4 Extracting, Predicting, Etc",
     "text": "6.4 Extracting, Predicting, Etc\nThe process for extracting information from the chains, predicting Y, etc. is going to be the same as it was for linear regression (since it uses the same API), so I’m not going to go through all of that here and instead just refer myself back to the linear_regression page.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Ch 6 - Bayesian Logistic Regression</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bayesian Logistic Regression</span>"
     ]
   },
   {

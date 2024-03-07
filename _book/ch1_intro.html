@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Notes on Bayesian Stats - 1&nbsp; Ch 1 - Intro</title>
+<title>Notes on Bayesian Stats - 1&nbsp; Intro</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -147,7 +147,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch1_intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Ch 1 - Intro</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch1_intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Intro</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -181,37 +181,37 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch1_intro.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Ch 1 - Intro</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Intro</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch2_beta_binomial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Ch 2 - The Beta Binomial Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Beta Binomial Model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch3_gamma_poisson.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Ch 3 - The Gamma-Poisson Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Gamma-Poisson Model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch4_posterior_simulation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ch 4 - Posterior Simulation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Posterior Simulation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch5_linear_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ch 5 - Linear Regression</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Linear Regression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ch6_logistic_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ch 6 - Bayesian Logistic Regression</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Bayesian Logistic Regression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -230,15 +230,15 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#probability" id="toc-probability" class="nav-link active" data-scroll-target="#probability"><span class="header-section-number">2</span> Probability</a></li>
-  <li><a href="#testing-hypotheses" id="toc-testing-hypotheses" class="nav-link" data-scroll-target="#testing-hypotheses"><span class="header-section-number">3</span> Testing Hypotheses</a></li>
-  <li><a href="#some-terminology" id="toc-some-terminology" class="nav-link" data-scroll-target="#some-terminology"><span class="header-section-number">4</span> Some Terminology</a>
+  <li><a href="#probability" id="toc-probability" class="nav-link active" data-scroll-target="#probability"><span class="header-section-number">1.1</span> Probability</a></li>
+  <li><a href="#testing-hypotheses" id="toc-testing-hypotheses" class="nav-link" data-scroll-target="#testing-hypotheses"><span class="header-section-number">1.2</span> Testing Hypotheses</a></li>
+  <li><a href="#some-terminology" id="toc-some-terminology" class="nav-link" data-scroll-target="#some-terminology"><span class="header-section-number">1.3</span> Some Terminology</a>
   <ul class="collapse">
-  <li><a href="#probability-vs-likelihood" id="toc-probability-vs-likelihood" class="nav-link" data-scroll-target="#probability-vs-likelihood"><span class="header-section-number">4.1</span> Probability vs Likelihood</a></li>
-  <li><a href="#calculating-joint-probability" id="toc-calculating-joint-probability" class="nav-link" data-scroll-target="#calculating-joint-probability"><span class="header-section-number">4.2</span> Calculating Joint probability</a></li>
+  <li><a href="#probability-vs-likelihood" id="toc-probability-vs-likelihood" class="nav-link" data-scroll-target="#probability-vs-likelihood"><span class="header-section-number">1.3.1</span> Probability vs Likelihood</a></li>
+  <li><a href="#calculating-joint-probability" id="toc-calculating-joint-probability" class="nav-link" data-scroll-target="#calculating-joint-probability"><span class="header-section-number">1.3.2</span> Calculating Joint probability</a></li>
   </ul></li>
-  <li><a href="#bayes-rule" id="toc-bayes-rule" class="nav-link" data-scroll-target="#bayes-rule"><span class="header-section-number">5</span> Bayes’ Rule</a></li>
-  <li><a href="#worked-example" id="toc-worked-example" class="nav-link" data-scroll-target="#worked-example"><span class="header-section-number">6</span> Worked example</a></li>
+  <li><a href="#bayes-rule" id="toc-bayes-rule" class="nav-link" data-scroll-target="#bayes-rule"><span class="header-section-number">1.4</span> Bayes’ Rule</a></li>
+  <li><a href="#worked-example" id="toc-worked-example" class="nav-link" data-scroll-target="#worked-example"><span class="header-section-number">1.5</span> Worked example</a></li>
   </ul>
 </nav>
     </div>
@@ -247,7 +247,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Ch 1 - Intro</span></h1>
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Intro</span></h1>
 </div>
 
 
@@ -265,40 +265,40 @@ window.Quarto = {
 
 
 <p>Basically, Bayesian statistics involves taking some prior beliefs and combining them with data to produce an updated (posterior) set of beliefs. In statistics-world, these beliefs are encoded as distributions (or combinations of distributions).</p>
-<section id="probability" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Probability</h1>
+<section id="probability" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="probability"><span class="header-section-number">1.1</span> Probability</h2>
 <p>Bayesian and frequentist frameworks tend to differ on what “probability” means. In a Bayesian framework, probability refers to the plausibility of an event. And this tends to be how most people use the term “probability” in informal settings. If we say that the Chiefs have a 90% probability of winning a game vs the Broncos, we’re probably using “probability” in the Bayesian sense.</p>
 <p>Frequentists, on the other hand, use probability to mean the relative frequency of a given event if it were repeated a lot of times. So in the above example, if this exact Chiefs team played this exact Broncos team in the same conditions 1,000 times, we’d expect them to win 900 of those games.</p>
 </section>
-<section id="testing-hypotheses" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Testing Hypotheses</h1>
+<section id="testing-hypotheses" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="testing-hypotheses"><span class="header-section-number">1.2</span> Testing Hypotheses</h2>
 <p>In a Bayesian framework, we ask this question: In light of the observed data, what’s the chance that the hypothesis is correct?</p>
 <p>In a frequentist framework, we ask this question: If in fact the hypothesis is incorrect, what’s the chance I’d have observed this, or even more extreme, data?</p>
 <p>(note that both of the above are from <a href="https://www.bayesrulesbook.com/chapter-1#thinking-like-a-bayesian">Ch 1 of Bayes Rules!</a>)</p>
 </section>
-<section id="some-terminology" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Some Terminology</h1>
+<section id="some-terminology" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="some-terminology"><span class="header-section-number">1.3</span> Some Terminology</h2>
 <p><em>Unconditional probability</em>: <span class="math inline">\(P(Y)\)</span> – the probability of X (e.g.&nbsp;the probability that an email is spam)</p>
 <p><em>Conditional probability</em>: <span class="math inline">\(P(Y|X)\)</span> – the probability of Y given X (e.g.&nbsp;the probability that an email is spam given that there’s an exclamation mark in the subject line).</p>
 <p>In some cases, <span class="math inline">\(P(Y|X) &gt; P(Y)\)</span>, for example <span class="math inline">\(P(orchestra | practice) &gt; P(orchestra)\)</span>, but in other cases, <span class="math inline">\(P(Y|X) &lt; P(Y)\)</span>, for example <span class="math inline">\(P(flu | wash hands) &lt; P(flu)\)</span></p>
 <p>Ordering is also important. Typically <span class="math inline">\(P(Y|X) \neq P(X|Y)\)</span>.</p>
 <p><em>Independence</em>: two events are independent if <span class="math inline">\(P(Y|X) = P(Y)\)</span>.</p>
 <p><em>Joint probability</em>: <span class="math inline">\(P(Y \cap X)\)</span> probabilty of Y <strong>and</strong> X. Assuming X is a binary variable, the total probability of observing Y is: <span class="math inline">\(P(Y) = P(Y \cap X) + P(Y \cap X^c)\)</span>, where <span class="math inline">\(X^c\)</span> refers to “not X”</p>
-<section id="probability-vs-likelihood" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="probability-vs-likelihood"><span class="header-section-number">4.1</span> Probability vs Likelihood</h2>
+<section id="probability-vs-likelihood" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="probability-vs-likelihood"><span class="header-section-number">1.3.1</span> Probability vs Likelihood</h3>
 <p>When B is known, the conditional probability function <span class="math inline">\(P(\cdot|B)\)</span> allows us to compare the probabilities of an unknown event, A or <span class="math inline">\(A^c\)</span>, ocurring with B:</p>
 <p><span class="math inline">\(P(A|B)\)</span> vs <span class="math inline">\(P(A^c|B)\)</span></p>
 <p>When A is known, the likelihood function <span class="math inline">\(L(\cdot|A) = P(A|\cdot)\)</span> allows us to evaluate the relative compatibility of data A with events B or <span class="math inline">\(B^c\)</span>:</p>
 <p><span class="math inline">\(L(B|A)\)</span> vs <span class="math inline">\(L(B^c|A)\)</span>.</p>
 <p>For example, when Y = y is known, we can use a likelihood function (<span class="math inline">\(L(\cdot |y) = f(y|\cdot)\)</span>) to compare the relative likelihood of observing data <em>y</em> under possible values of <span class="math inline">\(\pi\)</span> (in a binomial distribution), e.g.&nbsp;(<span class="math inline">\(L(\pi_1 | y)\)</span> vs <span class="math inline">\(L(\pi_2 | y)\)</span>).</p>
 </section>
-<section id="calculating-joint-probability" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="calculating-joint-probability"><span class="header-section-number">4.2</span> Calculating Joint probability</h2>
+<section id="calculating-joint-probability" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="calculating-joint-probability"><span class="header-section-number">1.3.2</span> Calculating Joint probability</h3>
 <p><span class="math inline">\(P(A|B) = \frac{P(A \cap B)}{P(B)}\)</span></p>
 </section>
 </section>
-<section id="bayes-rule" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Bayes’ Rule</h1>
+<section id="bayes-rule" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="bayes-rule"><span class="header-section-number">1.4</span> Bayes’ Rule</h2>
 <p>For events A and B, the posterior probability of B given A is:</p>
 <p><span class="math inline">\(P(B|A) = \frac{P(A \cap B)}{P(A)} = \frac{P(B)L(B|A)}{P(A)}\)</span></p>
 <p>where</p>
@@ -308,9 +308,9 @@ window.Quarto = {
 <p>Another way to think about this:</p>
 <p><span class="math inline">\(f(\pi | y) = \frac{f(\pi)L(\pi|y)}{f(y)}\)</span></p>
 </section>
-<section id="worked-example" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Worked example</h1>
-<div id="75504f5c" class="cell" data-execution_count="1">
+<section id="worked-example" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="worked-example"><span class="header-section-number">1.5</span> Worked example</h2>
+<div id="95dcc2f3" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">RDatasets</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Statistics</span></span>
@@ -353,21 +353,21 @@ window.Quarto = {
 </div>
 </div>
 <p>let’s look at the overall probability of default</p>
-<div id="9996205f" class="cell" data-execution_count="2">
+<div id="777c1b7c" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(d.<span class="op">:</span>Default)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>0.0333</code></pre>
 </div>
 </div>
 <p>and the overall probability of being a student</p>
-<div id="a33d6904" class="cell" data-execution_count="3">
+<div id="27c739fa" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(d.<span class="op">:</span>Student)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>0.2944</code></pre>
 </div>
 </div>
 <p>and the probability of default by student type</p>
-<div id="c91c8b84" class="cell" data-execution_count="4">
+<div id="3c4167fc" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p_tbl <span class="op">=</span> <span class="pp">@chain</span> d <span class="cf">begin</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">groupby</span>(<span class="op">:</span>Student)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">combine</span>(<span class="op">:</span>Default <span class="op">=&gt;</span> mean)</span>
@@ -406,7 +406,7 @@ window.Quarto = {
 <p>so, the likelihoods for student types are, <span class="math inline">\(L(S|D) = .043\)</span> and <span class="math inline">\(L(S^c|D) = .029\)</span></p>
 <p>If we want to figure out the probability of default for students, we can use:</p>
 <p><span class="math inline">\(P(S|D) = \frac{P(S)L(S|D)}{P(D)}\)</span></p>
-<div id="10f776e3" class="cell" data-execution_count="5">
+<div id="9aa200a2" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p_s_d <span class="op">=</span> (<span class="fu">mean</span>(d.<span class="op">:</span>Student) <span class="op">*</span> <span class="fl">0.043</span>) <span class="op">/</span> (<span class="fu">mean</span>(d.<span class="op">:</span>Default))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>0.3801561561561561</code></pre>
@@ -812,8 +812,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ch2_beta_binomial.html" class="pagination-link" aria-label="<span class='chapter-number'>2</span>&nbsp; <span class='chapter-title'>Ch 2 - The Beta Binomial Model</span>">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Ch 2 - The Beta Binomial Model</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./ch2_beta_binomial.html" class="pagination-link" aria-label="<span class='chapter-number'>2</span>&nbsp; <span class='chapter-title'>The Beta Binomial Model</span>">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Beta Binomial Model</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

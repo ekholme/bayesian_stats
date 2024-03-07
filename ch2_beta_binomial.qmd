@@ -1,5 +1,5 @@
 ---
-title: "Ch 2 - The Beta Binomial Model"
+title: "The Beta Binomial Model"
 jupyter: julia-1.9
 ---
 
@@ -24,7 +24,7 @@ using Random
 using StatsPlots
 
 d = Beta(4, 4) #alpha = 4, beta = 4
-x = 0:.01:1
+x = 0:0.01:1
 
 y = pdf.(d, x)
 ```
@@ -40,7 +40,7 @@ d2 = Beta(1.5, 4)
 
 y2 = pdf.(d2, x)
 
-plot!(x, y2, label = "Beta(1.5, 4)")
+plot!(x, y2, label="Beta(1.5, 4)")
 ```
 
 and again
@@ -50,7 +50,7 @@ d3 = Beta(4, 1.5)
 
 y3 = pdf.(d3, x)
 
-plot!(x, y3, label = "Beta(4, 1.5)")
+plot!(x, y3, label="Beta(4, 1.5)")
 ```
 
 
@@ -63,7 +63,7 @@ d4 = Beta(1, 1)
 
 y4 = pdf.(d4, x)
 
-plot!(x, y4, label = "Beta(1,1)")
+plot!(x, y4, label="Beta(1,1)")
 ```
 
 The flexibility of the beta distribution can make it useful.
@@ -79,7 +79,7 @@ where $\pi$ is the probability of success in a given trial.
 We can plot this as well
 
 ```{julia}
-b = Binomial(100, .5) # 100 trials with π = .5
+b = Binomial(100, 0.5) # 100 trials with π = .5
 
 x_bin = 0:1:100
 

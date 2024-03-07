@@ -1,5 +1,5 @@
 ---
-title: "Ch 6 - Bayesian Logistic Regression"
+title: "Bayesian Logistic Regression"
 juptyer: julia-1.9
 ---
 
