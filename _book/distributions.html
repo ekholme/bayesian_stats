@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Notes on Bayesian Stats - 6&nbsp; Appendix - Distributions</title>
+<title>Notes on Bayesian Stats - 7&nbsp; Appendix - Distributions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ch5_linear_regression.html" rel="prev">
+<link href="./ch6_logistic_regression.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -143,7 +143,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./distributions.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Appendix - Distributions</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./distributions.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Appendix - Distributions</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -206,8 +206,14 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./ch6_logistic_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ch 6 - Bayesian Logistic Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./distributions.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Appendix - Distributions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Appendix - Distributions</span></span></a>
   </div>
 </li>
     </ul>
@@ -220,8 +226,8 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#binomial-distribution" id="toc-binomial-distribution" class="nav-link active" data-scroll-target="#binomial-distribution"><span class="header-section-number">6.1</span> Binomial Distribution</a></li>
-  <li><a href="#multivariate-normal" id="toc-multivariate-normal" class="nav-link" data-scroll-target="#multivariate-normal"><span class="header-section-number">6.2</span> Multivariate Normal</a></li>
+  <li><a href="#binomial-distribution" id="toc-binomial-distribution" class="nav-link active" data-scroll-target="#binomial-distribution"><span class="header-section-number">7.1</span> Binomial Distribution</a></li>
+  <li><a href="#multivariate-normal" id="toc-multivariate-normal" class="nav-link" data-scroll-target="#multivariate-normal"><span class="header-section-number">7.2</span> Multivariate Normal</a></li>
   </ul>
 </nav>
     </div>
@@ -230,7 +236,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Appendix - Distributions</span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Appendix - Distributions</span></h1>
 </div>
 
 
@@ -248,14 +254,14 @@ window.Quarto = {
 
 
 <p>This chapter describes some common distributions used in Bayesian models</p>
-<section id="binomial-distribution" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="binomial-distribution"><span class="header-section-number">6.1</span> Binomial Distribution</h2>
+<section id="binomial-distribution" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="binomial-distribution"><span class="header-section-number">7.1</span> Binomial Distribution</h2>
 <p>Used when Y is a count outcome (e.g.&nbsp;the number of wins in a set of matches)</p>
 <p><span class="math inline">\(Y|\pi \sim Bin(n, \pi)\)</span></p>
 <p>where <span class="math inline">\(\pi\)</span> is the probability of success in a given trial</p>
 </section>
-<section id="multivariate-normal" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="multivariate-normal"><span class="header-section-number">6.2</span> Multivariate Normal</h2>
+<section id="multivariate-normal" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="multivariate-normal"><span class="header-section-number">7.2</span> Multivariate Normal</h2>
 <p>A multivariate normal distribution is an abstraction of the univariate normal distribution. It’s parameterized by two components:</p>
 <ul>
 <li>a mean vector, <span class="math inline">\(\mu\)</span>, and;</li>
@@ -263,7 +269,7 @@ window.Quarto = {
 </ul>
 <p>The diagonal of the covariance matrix describes each variable’s (e.g.&nbsp;<span class="math inline">\(x_i\)</span>) variance, whereas all off-diagonal elements describe the covariance between, <span class="math inline">\(x_i\)</span> and <span class="math inline">\(x_j\)</span> or whatever you want to refer to the variables as.</p>
 <p>If the off-diagonal elements are all 0, then all of the variables are independent. The code below shows an example of a multivariate normal distribution with 3 independent variables, all with a mean of 0 and a variance of 5.</p>
-<div id="3d4d76c8" class="cell" data-execution_count="1">
+<div id="fe5d2eb1" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -279,7 +285,7 @@ dim: 3
 </div>
 </div>
 <p>And the code below will do create a multivariate normal distribution where the variables are correlated</p>
-<div id="83068c8e" class="cell" data-execution_count="2">
+<div id="6a6adb1d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Σ <span class="op">=</span> [[<span class="fl">1.0</span>, <span class="fl">0.8</span>, <span class="fl">0.7</span>] [<span class="fl">0.8</span>, <span class="fl">1.0</span>, <span class="fl">0.9</span>] [<span class="fl">0.7</span>, <span class="fl">0.9</span>, <span class="fl">1.0</span>]]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>d2 <span class="op">=</span> <span class="fu">MvNormal</span>(<span class="fu">zeros</span>(p), Σ)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -685,8 +691,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a 5="" href="./ch5_linear_regression.html" class="pagination-link  aria-label=" &lt;span="" -="" linear="" regression&lt;="" span&gt;"="">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ch 5 - Linear Regression</span></span>
+      <a 6="" href="./ch6_logistic_regression.html" class="pagination-link  aria-label=" &lt;span="" -="" bayesian="" logistic="" regression&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ch 6 - Bayesian Logistic Regression</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

@@ -1,0 +1,134 @@
+---
+title: "Ch 6 - Bayesian Logistic Regression"
+juptyer: julia-1.9
+---
+
+In this chapter, I'm going to walk through fitting a bayesian logistic regression. This is analogous to the previous chapter where I fit a linear regression, but, uh, it's a logistic regression.
+
+Just like in the last chapter, I'm going to use Julia's [Turing.jl](https://turinglang.org) package. This example is drawn (heavily) from [Jose Storopoli's bayesian stats notes](https://storopoli.io/Bayesian-Julia/pages/07_logistic_reg/).
+
+First, I'll load some libraries and read in some data.
+
+
+```{julia}
+using Distributions
+using Plots
+using Turing
+using Random
+using DataFrames
+using LazyArrays
+using CSV
+
+Random.seed!(0408)
+
+#read in data
+url = "https://raw.githubusercontent.com/storopoli/Bayesian-Julia/master/datasets/wells.csv"
+
+wells = CSV.read(download(url), DataFrame)
+
+describe(wells)
+```
+
+The outcome variable in this dataset is `switch` -- a binary indicator of whether a household switched wells after being informed that the wells they'd been using previously were contaminated.
+
+So a first step then is to separate the outcome from the rest of the predictors.
+
+*Note -- it's best practice to explore the data and do some feature engineering (e.g. z-scoring numeric predictors). But I'm not going to do that here because I don't really care about the quality of the model in this contrived example.*
+
+
+```{julia}
+X = Matrix(select(wells, Not(:switch)))
+y = wells.:switch
+```
+
+Here's what we're modeling:
+
+$P(switch_i) = Logistic(\alpha +\beta^T \bf X_i)$
+
+In words -- that the probability of switching wells is equal to the logistic transformation of a linear combination of $\alpha + \beta^T \bf X_i$, which is just the linear regression model. 
+
+And recall that the logistic function is:
+
+$Logistic(x) = \frac{1}{1 + e^{(-x)}}$
+
+## Define the model
+
+Just as we did in the linear regression model, we define a logistic regression using Turin's `@model macro`. Once again, this uses pretty weak priors, and each variable gets the same prior here
+
+```{julia}
+@model function log_reg(X, y)
+    n_feat = size(X, 2)
+
+    #priors
+    α ~ Normal(0, 3)
+    β ~ filldist(TDist(3), n_feat)
+
+    #likelihood
+    return y ~ arraydist(LazyArray(@~ BernoulliLogit.(α .+ X * β)))
+end
+```
+
+In notation:
+
+$y \sim Bernoulli(p)$
+
+$p \sim Logistic(\alpha + \bf X \cdot \beta)$
+
+$\alpha \sim N(0, 3)$
+
+$\beta_j \sim t(0, 1, 3)$ for j in $\{\beta_1, ..., \beta_j\}$
+
+Also -- the model specification above comes from Jose Storopoli's code, and there are a few little wrinkles I didn't quite understand at first:
+
+- `filldist()`is basically a loop to make the same distribution multiple times. So for example, it will create `n_feat` identical distributions (T distributions with 3 degrees of freedom);
+- `arraydist()` is similar to `filldist()`, but it is a wrapper for an array of distributions that aren't necessarily the same.
+- As far as I can tell, `LazyArray()` and `@~` provide ways to specify lazy computations, which make the operations faster and more efficient.
+- `BernoulliLogit()` is a cool way to combine the `Logistic()` and `Bernoulli()` functions.
+
+## Simulate the Posterior
+
+Then we can simulate the posterior just like we did before:
+
+
+```{julia}
+m = log_reg(X, y)
+
+chn = sample(m, NUTS(), MCMCThreads(), 1_000, 3);
+
+summarize(chn)
+```
+
+
+## Trying another Version
+
+Ok, so just to prove that the `arraydist(...)` term is doing what I think it's doing in the model above, I'm going to define a second model that's hopefully equivalent to the first! 
+
+```{julia}
+@model function log_reg2(X, y)
+    n_feat = size(X, 2)
+
+    #priors
+    α ~ Normal(0, 3)
+    β ~ filldist(TDist(3), n_feat)
+
+    for i ∈ eachindex(y)
+        y[i] ~ BernoulliLogit(α + X[i, :]' * β)
+    end
+end
+```
+
+```{julia}
+m2 = log_reg2(X, y)
+
+chn2 = sample(m2, NUTS(), MCMCThreads(), 1_000, 3);
+
+summarize(chn2)
+```
+
+```{julia}
+isapprox(summarize(chn2)[:, :mean], summarize(chn)[:, :mean], atol=0.01)
+```
+
+## Extracting, Predicting, Etc
+
+The process for extracting information from the chains, predicting Y, etc. is going to be the same as it was for linear regression (since it uses the same API), so I'm not going to go through all of that here and instead just refer myself back to the [linear_regression](ch5_linear_regression.qmd) page.

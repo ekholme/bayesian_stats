@@ -1,0 +1,12 @@
+{
+  "hash": "7364edb03de25cee617581e69f29f8ba",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: Appendix - Distributions\n---\n\nThis chapter describes some common distributions used in Bayesian models\n\n## Binomial Distribution\n\nUsed when Y is a count outcome (e.g. the number of wins in a set of matches)\n\n$Y|\\pi \\sim Bin(n, \\pi)$\n\nwhere $\\pi$ is the probability of success in a given trial\n\n## Multivariate Normal\n\nA multivariate normal distribution is an abstraction of the univariate normal distribution. It's parameterized by two components: \n\n- a mean vector, $\\mu$, and;\n- a covariance matrix, $\\Sigma$\n\nThe diagonal of the covariance matrix describes each variable's (e.g. $x_i$) variance, whereas all off-diagonal elements describe the covariance between, $x_i$ and $x_j$ or whatever you want to refer to the variables as.\n\nIf the off-diagonal elements are all 0, then all of the variables are independent. The code below shows an example of a multivariate normal distribution with 3 independent variables, all with a mean of 0 and a variance of 5.\n\n::: {#fe5d2eb1 .cell execution_count=1}\n``` {.julia .cell-code}\nusing Distributions\nusing LinearAlgebra\n\np = 3\n\nd = MvNormal(zeros(p), 5.0 * I)\n```\n\n::: {.cell-output .cell-output-display execution_count=2}\n```\nIsoNormal(\ndim: 3\nμ: [0.0, 0.0, 0.0]\nΣ: [5.0 0.0 0.0; 0.0 5.0 0.0; 0.0 0.0 5.0]\n)\n```\n:::\n:::\n\n\nAnd the code below will do create a multivariate normal distribution where the variables are correlated\n\n::: {#6a6adb1d .cell execution_count=2}\n``` {.julia .cell-code}\nΣ = [[1.0, 0.8, 0.7] [0.8, 1.0, 0.9] [0.7, 0.9, 1.0]]\n\nd2 = MvNormal(zeros(p), Σ)\n```\n\n::: {.cell-output .cell-output-display execution_count=3}\n```\nFullNormal(\ndim: 3\nμ: [0.0, 0.0, 0.0]\nΣ: [1.0 0.8 0.7; 0.8 1.0 0.9; 0.7 0.9 1.0]\n)\n```\n:::\n:::\n\n\n",
+    "supporting": [
+      "distributions_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

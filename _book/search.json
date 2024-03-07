@@ -200,23 +200,73 @@
     ]
   },
   {
+    "objectID": "ch6_logistic_regression.html",
+    "href": "ch6_logistic_regression.html",
+    "title": "6  Ch 6 - Bayesian Logistic Regression",
+    "section": "",
+    "text": "6.1 Define the model\nJust as we did in the linear regression model, we define a logistic regression using Turin’s @model macro. Once again, this uses pretty weak priors, and each variable gets the same prior here\n@model function log_reg(X, y)\n    n_feat = size(X, 2)\n\n    #priors\n    α ~ Normal(0, 3)\n    β ~ filldist(TDist(3), n_feat)\n\n    #likelihood\n    return y ~ arraydist(LazyArray(@~ BernoulliLogit.(α .+ X * β)))\nend\n\nlog_reg (generic function with 2 methods)\nIn notation:\n\\(y \\sim Bernoulli(p)\\)\n\\(p \\sim Logistic(\\alpha + \\bf X \\cdot \\beta)\\)\n\\(\\alpha \\sim N(0, 3)\\)\n\\(\\beta_j \\sim t(0, 1, 3)\\) for j in \\(\\{\\beta_1, ..., \\beta_j\\}\\)\nAlso – the model specification above comes from Jose Storopoli’s code, and there are a few little wrinkles I didn’t quite understand at first:",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Ch 6 - Bayesian Logistic Regression</span>"
+    ]
+  },
+  {
+    "objectID": "ch6_logistic_regression.html#define-the-model",
+    "href": "ch6_logistic_regression.html#define-the-model",
+    "title": "6  Ch 6 - Bayesian Logistic Regression",
+    "section": "",
+    "text": "filldist()is basically a loop to make the same distribution multiple times. So for example, it will create n_feat identical distributions (T distributions with 3 degrees of freedom);\narraydist() is similar to filldist(), but it is a wrapper for an array of distributions that aren’t necessarily the same.\nAs far as I can tell, LazyArray() and @~ provide ways to specify lazy computations, which make the operations faster and more efficient.\nBernoulliLogit() is a cool way to combine the Logistic() and Bernoulli() functions.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Ch 6 - Bayesian Logistic Regression</span>"
+    ]
+  },
+  {
+    "objectID": "ch6_logistic_regression.html#simulate-the-posterior",
+    "href": "ch6_logistic_regression.html#simulate-the-posterior",
+    "title": "6  Ch 6 - Bayesian Logistic Regression",
+    "section": "6.2 Simulate the Posterior",
+    "text": "6.2 Simulate the Posterior\nThen we can simulate the posterior just like we did before:\n\nm = log_reg(X, y)\n\nchn = sample(m, NUTS(), MCMCThreads(), 1_000, 3);\n\nsummarize(chn)\n\n┌ Warning: Only a single thread available: MCMC chains are not sampled in parallel\n└ @ AbstractMCMC C:\\Users\\eric_ekholm\\.julia\\packages\\AbstractMCMC\\Es490\\src\\sample.jl:307\n┌ Info: Found initial step size\n└   ϵ = 0.003125\n┌ Info: Found initial step size\n└   ϵ = 0.003125\n┌ Info: Found initial step size\n└   ϵ = 0.0125\nSampling (1 threads):  67%|████████████████████         |  ETA: 0:00:02Sampling (1 threads): 100%|█████████████████████████████| Time: 0:00:08\n\n\n\n  parameters      mean       std      mcse    ess_bulk    ess_tail      rhat   ⋯\n      Symbol   Float64   Float64   Float64     Float64     Float64   Float64   ⋯\n           α   -0.1551    0.0994    0.0028   1256.7607   1606.9207    1.0026   ⋯\n        β[1]    0.4671    0.0408    0.0011   1371.1125   1734.0509    1.0030   ⋯\n        β[2]   -0.0090    0.0011    0.0000   3094.1331   2249.2855    1.0008   ⋯\n        β[3]   -0.1230    0.0750    0.0018   1673.0766   1576.0275    1.0006   ⋯\n        β[4]    0.0423    0.0096    0.0002   1800.2146   1864.5301    1.0015   ⋯\n                                                                1 column omitted",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Ch 6 - Bayesian Logistic Regression</span>"
+    ]
+  },
+  {
+    "objectID": "ch6_logistic_regression.html#trying-another-version",
+    "href": "ch6_logistic_regression.html#trying-another-version",
+    "title": "6  Ch 6 - Bayesian Logistic Regression",
+    "section": "6.3 Trying another Version",
+    "text": "6.3 Trying another Version\nOk, so just to prove that the arraydist(...) term is doing what I think it’s doing in the model above, I’m going to define a second model that’s hopefully equivalent to the first!\n\n@model function log_reg2(X, y)\n    n_feat = size(X, 2)\n\n    #priors\n    α ~ Normal(0, 3)\n    β ~ filldist(TDist(3), n_feat)\n\n    for i ∈ eachindex(y)\n        y[i] ~ BernoulliLogit(α + X[i, :]' * β)\n    end\nend\n\nlog_reg2 (generic function with 2 methods)\n\n\n\nm2 = log_reg2(X, y)\n\nchn2 = sample(m2, NUTS(), MCMCThreads(), 1_000, 3);\n\nsummarize(chn2)\n\n┌ Warning: Only a single thread available: MCMC chains are not sampled in parallel\n└ @ AbstractMCMC C:\\Users\\eric_ekholm\\.julia\\packages\\AbstractMCMC\\Es490\\src\\sample.jl:307\n┌ Info: Found initial step size\n└   ϵ = 0.0015625\n┌ Info: Found initial step size\n└   ϵ = 0.00625\n┌ Info: Found initial step size\n└   ϵ = 0.00625\nSampling (1 threads):  67%|████████████████████         |  ETA: 0:00:04Sampling (1 threads): 100%|█████████████████████████████| Time: 0:00:18\n\n\n\n  parameters      mean       std      mcse    ess_bulk    ess_tail      rhat   ⋯\n      Symbol   Float64   Float64   Float64     Float64     Float64   Float64   ⋯\n           α   -0.1574    0.0988    0.0028   1292.1404   1714.7255    1.0039   ⋯\n        β[1]    0.4661    0.0414    0.0011   1505.7384   1585.0674    1.0012   ⋯\n        β[2]   -0.0090    0.0010    0.0000   3255.5574   2392.8436    1.0014   ⋯\n        β[3]   -0.1216    0.0772    0.0019   1568.5344   1852.0284    1.0008   ⋯\n        β[4]    0.0427    0.0100    0.0002   1702.9298   1573.2741    1.0022   ⋯\n                                                                1 column omitted\n\n\n\n\n\nisapprox(summarize(chn2)[:, :mean], summarize(chn)[:, :mean], atol=0.01)\n\ntrue",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Ch 6 - Bayesian Logistic Regression</span>"
+    ]
+  },
+  {
+    "objectID": "ch6_logistic_regression.html#extracting-predicting-etc",
+    "href": "ch6_logistic_regression.html#extracting-predicting-etc",
+    "title": "6  Ch 6 - Bayesian Logistic Regression",
+    "section": "6.4 Extracting, Predicting, Etc",
+    "text": "6.4 Extracting, Predicting, Etc\nThe process for extracting information from the chains, predicting Y, etc. is going to be the same as it was for linear regression (since it uses the same API), so I’m not going to go through all of that here and instead just refer myself back to the linear_regression page.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Ch 6 - Bayesian Logistic Regression</span>"
+    ]
+  },
+  {
     "objectID": "distributions.html",
     "href": "distributions.html",
-    "title": "6  Appendix - Distributions",
+    "title": "7  Appendix - Distributions",
     "section": "",
-    "text": "6.1 Binomial Distribution\nUsed when Y is a count outcome (e.g. the number of wins in a set of matches)\n\\(Y|\\pi \\sim Bin(n, \\pi)\\)\nwhere \\(\\pi\\) is the probability of success in a given trial",
+    "text": "7.1 Binomial Distribution\nUsed when Y is a count outcome (e.g. the number of wins in a set of matches)\n\\(Y|\\pi \\sim Bin(n, \\pi)\\)\nwhere \\(\\pi\\) is the probability of success in a given trial",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Appendix - Distributions</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Appendix - Distributions</span>"
     ]
   },
   {
     "objectID": "distributions.html#multivariate-normal",
     "href": "distributions.html#multivariate-normal",
-    "title": "6  Appendix - Distributions",
-    "section": "6.2 Multivariate Normal",
-    "text": "6.2 Multivariate Normal\nA multivariate normal distribution is an abstraction of the univariate normal distribution. It’s parameterized by two components:\n\na mean vector, \\(\\mu\\), and;\na covariance matrix, \\(\\Sigma\\)\n\nThe diagonal of the covariance matrix describes each variable’s (e.g. \\(x_i\\)) variance, whereas all off-diagonal elements describe the covariance between, \\(x_i\\) and \\(x_j\\) or whatever you want to refer to the variables as.\nIf the off-diagonal elements are all 0, then all of the variables are independent. The code below shows an example of a multivariate normal distribution with 3 independent variables, all with a mean of 0 and a variance of 5.\n\nusing Distributions\nusing LinearAlgebra\n\np = 3\n\nd = MvNormal(zeros(p), 5.0 * I)\n\nIsoNormal(\ndim: 3\nμ: [0.0, 0.0, 0.0]\nΣ: [5.0 0.0 0.0; 0.0 5.0 0.0; 0.0 0.0 5.0]\n)\n\n\nAnd the code below will do create a multivariate normal distribution where the variables are correlated\n\nΣ = [[1.0, 0.8, 0.7] [0.8, 1.0, 0.9] [0.7, 0.9, 1.0]]\n\nd2 = MvNormal(zeros(p), Σ)\n\nFullNormal(\ndim: 3\nμ: [0.0, 0.0, 0.0]\nΣ: [1.0 0.8 0.7; 0.8 1.0 0.9; 0.7 0.9 1.0]\n)",
+    "title": "7  Appendix - Distributions",
+    "section": "7.2 Multivariate Normal",
+    "text": "7.2 Multivariate Normal\nA multivariate normal distribution is an abstraction of the univariate normal distribution. It’s parameterized by two components:\n\na mean vector, \\(\\mu\\), and;\na covariance matrix, \\(\\Sigma\\)\n\nThe diagonal of the covariance matrix describes each variable’s (e.g. \\(x_i\\)) variance, whereas all off-diagonal elements describe the covariance between, \\(x_i\\) and \\(x_j\\) or whatever you want to refer to the variables as.\nIf the off-diagonal elements are all 0, then all of the variables are independent. The code below shows an example of a multivariate normal distribution with 3 independent variables, all with a mean of 0 and a variance of 5.\n\nusing Distributions\nusing LinearAlgebra\n\np = 3\n\nd = MvNormal(zeros(p), 5.0 * I)\n\nIsoNormal(\ndim: 3\nμ: [0.0, 0.0, 0.0]\nΣ: [5.0 0.0 0.0; 0.0 5.0 0.0; 0.0 0.0 5.0]\n)\n\n\nAnd the code below will do create a multivariate normal distribution where the variables are correlated\n\nΣ = [[1.0, 0.8, 0.7] [0.8, 1.0, 0.9] [0.7, 0.9, 1.0]]\n\nd2 = MvNormal(zeros(p), Σ)\n\nFullNormal(\ndim: 3\nμ: [0.0, 0.0, 0.0]\nΣ: [1.0 0.8 0.7; 0.8 1.0 0.9; 0.7 0.9 1.0]\n)",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Appendix - Distributions</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Appendix - Distributions</span>"
     ]
   }
 ]

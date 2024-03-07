@@ -12,11 +12,12 @@ book:
     - ch3_gamma_poisson.qmd
     - ch4_posterior_simulation.qmd
     - ch5_linear_regression.qmd
+    - ch6_logistic_regression.qmd
     - distributions.qmd
 
 format:
   html:
     theme: cosmo
 
-
+freeze: auto
 
