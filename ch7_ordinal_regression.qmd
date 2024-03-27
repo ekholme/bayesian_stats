@@ -1,0 +1,215 @@
+---
+title: Bayesian Ordinal Regression"
+jupyter: julia-1.9
+---
+
+And we're moving onward here into ordinal regresion. As with the previous chapter, I'm using Turing.jl here to fit models, and I'm drawing lots of the ideas from [Jose Storopoli's bayesian stats notes](https://storopoli.io/Bayesian-Julia/pages/08_ordinal_reg/). Some of the ideas and notation also come from McElreath's Statistical Rethinking.
+
+## What is Ordinal Regresssion?
+
+Probably obviously, ordinal regression is a linear model where y is ordinal. In a typical linear regression, y is interval data -- the values are continuous, and the distance between adjacent values are equidistant. So like the difference between 1 and 2 is the same as the distance between 2 and 3.
+
+When y is ordinal, we don't assume that y is interval data. We know that 2 is "more" than 1, but we can't know for certain that the distance between 1 and 2 is the same as the distance between 2 and 3. Likert scales and other survey measures are ordinal. So we can't use a regular linear regression.
+
+To fit our model, we will typically use a cumulative link function. This helps ensure that the predictions from our model will move through categories sequentially.  The cumulative link function we typically (always?) want is the cumulative distribution function (CDF):
+
+$$P(Y \le y) = \sum^{y}_{i=y_{min}}P(Y=i)$$
+
+
+which gives us the probability that y is equal to a given value or any lesser value. We then use these cumulative probabilities to calculate the log-cumulative-odds:
+
+$$logit(x) = ln(\frac{x}{1-x})$$
+
+The logit function is the inverse of the logistic function. Recall that the logistic function maps any real number (-Inf, Inf) to the range (0, 1), so the logit function maps any number (0, 1) to (-Inf, Inf), and the resulting value is on the log-odds scale. Since we're converting cumulative probabilities, the outputs of this transformation will be log-cumulative-odds.
+
+We use these log-cumulative-odds to estimate intercepts for all of the possible values of our ordinal Y variable. So like the intercepts tell us the cut-points for each possible Y value.
+
+Imagine we have an ordinal Y with range 1-4. We would estimate 3 cutpoints (intercepts), and each intercept implies a log-cumulative-odds (and, correspondingly, a cumulative probability) of scoring k (where k is 1, 2, or 3) or less. We don't need to estimate an intercept for the largest value (4), because we know the cumulative probability will be 1 (since all values will be 4 or less).
+
+## Working through an Example
+
+Now let's work through an example to illustrate some of the above. We'll also extend the discussion of the intercepts above to cases with predictor variables.
+
+First we can load some packages and read in some data. I'll use some [wine quality data I found on kaggle](https://www.kaggle.com/datasets/yasserh/wine-quality-dataset).
+
+```{julia}
+using Turing
+using Distributions
+using LazyArrays
+using DataFrames
+using CSV
+using Random: seed!
+using LinearAlgebra
+using Bijectors
+using CategoricalArrays
+using Chain
+using Plots
+
+seed!(0408)
+
+wine = CSV.read("data/wine.csv", DataFrame)
+```
+
+
+Let's just use a couple of predictors -- alcohol and sulphates. And we'll use quality -- an ordinal variable -- as our outcome.
+
+```{julia}
+X = DataFrames.select(wine, [:sulphates, :alcohol])
+y = wine[:, :quality]
+```
+
+And we'll z-score both of the predictors, since they're numeric:
+
+```{julia}
+function my_z(x::Vector{Float64})
+    μ = mean(skipmissing(x))
+    σ = std(skipmissing(x))
+
+    z = (x .- μ) ./ σ
+    return z
+end
+
+Xz = Matrix(mapcols(x -> my_z(x), X))
+```
+
+## Exploring the intercept parameters
+
+Before estimating the model, let's take a few minutes and think about the intercept parameters. We'll first look at the histogram of values of y (wine quality):
+
+```{julia}
+histogram(y)
+```
+
+And then we can get the cumulative probability that y is at value k or lower:
+
+```{julia}
+y_unique = sort(unique(y))
+el_counts = [count(==(i), y) for i in y_unique]
+el_dict = sort(Dict(zip(y_unique, el_counts)))
+
+pr_k = values(el_dict) ./ length(y)
+
+cum_pr_k = cumsum(pr_k)
+```
+
+So this tells us that 0.5% of the y values are 3 (which is the lowest rating in the data), 3.4% are 4 or lower, 45% are 5 or lower, etc.
+
+And if we wanted to convert these into log cumulative odds, which is the metric we're using in our model:
+
+```{julia}
+my_logit(x) = log(x / (1 - x))
+
+log_cum_odds = my_logit.(cum_pr_k)
+```
+
+## Define the model
+
+Next we define a model just like we have previously in Turing.
+
+```{julia}
+@model function ordreg(X, y)
+    #model setup
+    n_feat = size(X, 2)
+    k = maximum(y)
+
+    #priors
+    cutpoints ~ transformed(filldist(TDist(3) * 5, k - 1), Bijectors.OrderedBijector())
+    β ~ filldist(TDist(3) * 2.5, n_feat)
+
+    #likelihood
+    return y ~ arraydist([OrderedLogistic(X[i, :]' * β, cutpoints) for i ∈ eachindex(y)])
+end
+```
+
+Ok so let's walk through this:
+
+- `n_feat` is the number of columns in our predictor matrix, and `k` is the number of unique response options in `y`
+
+- `filldist(TDist(3) * 5, k-1)` creates a `k-1` length vector of prior T distributions (with df = 3, $\mu$ = 0, $\sigma$ = 5) for our cutpoints.
+
+- the `cutpoints` are just our intercepts, but there will be `k-1` of them, and they're in a log-cumulative-odds scale. One wrinkle here is that we're estimating 7 cutpoints for this wine data, so we'll estimate cutpoints for wine quality of 1 and 2 as well, even though we don't see these values in our data (because they're hypothetically plausible). It might also be plausible to score higher than 8 -- I'm not sure -- but we don't estimate higher potential scores here.
+
+- from what I can tell, the `transformed(..., OrderedBijector())` term ensures that our cutpoints are ordered appropriately
+
+- the $\beta$ term specifices the prior for our betas, just like in previous models
+
+- the final term returns an array of `OrderedLogistic()` distributions (`arraydist()`) parameterized by the linear model (`X[i,:]' * $\beta$`) and by the cutpoints, which recall we specified priors for the betas and the cutpoints already.
+
+Mathematically, we can annotate this as:
+
+$Y_i \sim Ordered-logit(\phi_i, \kappa)$
+
+$\phi_i = X * \beta$
+
+$\kappa_k \sim t(0, 5, 3)$ for k in $\{\kappa_1, ..., \kappa_k\}$ 
+
+$\beta_j \sim t(0, 2.5, 3)$ for j in $\{\beta_1, ..., \beta_j\}$
+
+or something like that.
+
+## Simulate the Posterior
+
+Then we can simulate the posterior just like we did before:
+
+```{julia}
+model = ordreg(Xz, y)
+
+chn = sample(model, NUTS(), MCMCThreads(), 1_000, 2)
+```
+
+We can summarize the chain here:
+
+```{julia}
+summarize(chn)
+```
+
+And this tells us that something feels off -- the `rhat` should be between 0.99 and 1.01. Recall that `rhat` values near 1 imply convergence. Let's try again, but we'll rescale the quality values so that they range from 1-6 instead of from 3-8.
+
+```{julia}
+y_new = y .- 2
+
+m2 = ordreg(Xz, y_new)
+chn2 = sample(m2, NUTS(), MCMCThreads(), 1_000, 2)
+```
+
+```{julia}
+summarize(chn2)
+```
+
+Ok, the `rhat`s look a lot better here, so let's move forward with this version. The summaries produced by `summarize()` will be in the log-odds scale, and we might want the probabilities instead: 
+
+```{julia}
+function sigmoid(x::Float64)
+    return exp(x) / (1 + exp(x))
+end
+
+@chain quantile(chn2) begin
+    DataFrame
+    select(_, :parameters, names(_, r"%") .=> ByRow(sigmoid); renamecols=false)
+end
+```
+
+So, if I understand the model correctly, it's really difficult to interpret our betas without doing some additional simulation. But I think we can interpret the cutpoints as the probability that a wine will have a quality of `k` or less given a 0 value of our predictor variables -- which, recall, 0 is the average, since we z-scored. So there's a ~91% probability that a wine with average sulphates and alcohol content will score a 4 or lower.
+
+## Making Predictions 
+
+As far as I can tell, Turing doesn't yet have functionality to generate predictions for an ordinal regression (but maybe I'm wrong?). But we can do some predictions by hand. In doing so, we can set up a little test set of 2 rows -- one where our predictors are equal to 0 and one where they're equal to 1. This will allow us to see the effect of increasing alcohol and sulphates (together) on wine quality (I'm using "effect" loosely here, since this definitely isn't a causal model).
+
+Basically what we want to do here is extract the mean values for our beta coefficients and our cutpoints, then estimate $\eta$ by multiplying each row of our new data by the beta coefficients. $\eta$ and the cutpoints then parameterize an OrderedLogistic() distribution, and we draw (in this case) 1,000 samples from this distribution.
+
+```{julia}
+betas = [mean(chn2, k) for k in MCMCChains.namesingroup(chn2, :β)]
+cuts = [mean(chn2, k) for k in MCMCChains.namesingroup(chn2, :cutpoints)]
+
+X_tst = [0.0 0.0; 1.0 1.0]
+
+n_pred = 1_000
+
+y0 = rand(OrderedLogistic(X_tst[1, :]' * betas, cuts), n_pred)
+
+y1 = rand(OrderedLogistic(X_tst[end, :]' * betas, cuts), n_pred)
+
+plot(histogram(y0, title="y0", label=""), histogram(y1, title="y1", label=""), ylims=[0, 600])
+```
+
+When we plot the samples, we can see that increased alcohol and sulphate values (together) tend to be associated with higher wine quality.

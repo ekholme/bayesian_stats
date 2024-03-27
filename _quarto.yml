@@ -13,6 +13,7 @@ book:
     - ch4_posterior_simulation.qmd
     - ch5_linear_regression.qmd
     - ch6_logistic_regression.qmd
+    - ch7_ordinal_regression.qmd
     - distributions.qmd
 
 format:
