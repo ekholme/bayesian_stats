@@ -1,0 +1,333 @@
+---
+title: "Multilevel Models"
+jupyter: julia-1.9
+---
+
+## What are Multilevel Models
+
+Multilevel models (MLMs) are statistical models that can better accommodate nested data than traditional linear (and generalized linear) models can. The idea of a multilevel model is that, in the real world, observations are *not* independent, although this is one of the assumptions of the linear model. For instance, we might have a dataset where students are nested within classrooms, or where people contribute data over time. In these cases, we want the model to account for the dependencies (students within classrooms, measurements within people).
+
+In this section, I'm going to use Julia's [Turing.jl](https://turinglang.org) package to fit a few different flavors of multilevel models. These notes are informed by multiple sources, including [Jose Storopoli's bayesian MLM notes](https://storopoli.io/Bayesian-Julia/pages/11_multilevel_models/) and Richard McElreath's [Statistical Rethinking](https://www.amazon.com/Statistical-Rethinking-Bayesian-Examples-Chapman/dp/036713991X). I'm going to use the sleepstudy data from the MixedModels.jl package throughout 
+
+So first, I'll load some libraries and read in the data:
+
+```{julia}
+using Turing
+using Distributions
+using Plots
+using MixedModels
+using Random: seed!
+using DataFrames
+using LinearAlgebra
+using Statistics
+using StatsPlots
+using StatsBase
+using SparseArrays
+using PDMats
+
+seed!(0408)
+
+sleepstudy = MixedModels.dataset(:sleepstudy) |> DataFrame
+```
+
+We can see in the data here that we have 3 columns:
+
+- `days` represents the number of days of sleep deprivation
+- `reaction` is the participant's reaction time (in ms)
+- `subj` is the subject identifier
+
+Altogether, the dataset has 180 rows, and each of the 18 participants contributed 10 datapoints each. This data is a good candidate for a multilevel modeling approach.
+
+The model we want to fit involves regressing reaction time on the number of days of sleep deprivation -- that is, we want to see the relationship between days of sleep deprivation and reaction time. Since `reaction` is a continuous variable, this is a linear regression problem. In a typical single-level model, this is a simple linear regression where:
+
+$y = \bf X \beta + \epsilon$
+
+But this model doesn't account for the the potential differences between subjects.
+
+A general form of the model we want to fit is
+
+$y = \bf X \beta + \bf Z u + \epsilon$
+
+where $Z$ is a membership matrix and $u$ is a matrix (or vector) of random effect coefficients.
+
+To accomodate these dependencies, we can fit different flavors of MLMs. There are basically 4 different types of these models:
+
+1. **Random Intercept Models**: each group receives a unique intercept term.
+
+2. **Random Slope Models**: each group gets a different coefficient for one or more slope parameters (in this example, we only have 1 slope, but it can be extended to include multiple slopes).
+
+3. **Random-Intercept Random-Slope Models**: each group gets a unique intercept and unique slope coefficients.
+
+4. **Correlated Random-Intercept Random-Slope Models**: basically the same as the previous one, but we allow the intercepts and slopes to covary (whereas the previous version constrains the covariances to 0).
+
+Before fitting the models, we'll lightly process the data.
+
+## Process data
+
+First, we'll convert the id strings into ints, such that 1 will correspond to the first subject, 2 to the second, etc.
+
+```{julia}
+ids = sleepstudy.:subj
+# Dictionary to store unique strings and their corresponding integer values
+id_map = Dict()
+int_counter = 1
+
+# Loop through the vector and build the dictionary
+for string in ids
+    if haskey(id_map, string)
+        # String already exists, use its value
+    else
+        # New unique string, assign a new integer value
+        id_map[string] = int_counter
+        int_counter += 1
+    end
+end
+
+# Replace strings with integer values using comprehension
+id_ints = [id_map[string] for string in ids]
+
+```
+
+Next, we'll do some work to separate the data into various components:
+
+- `y` is our outcome variable
+- `X` is the design matrix for fixed effects
+- `Z1` is the matrix used to estimate random intercepts
+- `Z2` is the matrix used to estimate random slopes
+
+```{julia}
+y = sleepstudy[:, :reaction];
+X = Matrix(select(sleepstudy, :days));
+
+Z1 = indicatormat(sleepstudy[!, :subj])'; # this is a Z matrix for intercepts
+Z2 = Array(sparse(1:nrow(sleepstudy), id_ints, sleepstudy[:, :days])); #Z matrix for slopes
+
+```
+
+## Random Intercept Model
+
+First we'll specify a random intercept model. In this model, each group gets its own intercept. The math notation for the model is roughly:
+
+$y \sim Normal(\alpha + \alpha_j + \bf X \beta, \sigma)$
+$\alpha \sim Normal(\mu_\alpha, \sigma_\alpha)$
+$\alpha_j \sim Normal(0, \tau)$
+$\beta \sim Normal(0, 2)$
+$\tau \sim truncatedCauchy(0, 2)$
+$\sigma \sim Exponential(1)$
+
+```{julia}
+@model function rand_int(X, y, Z)
+    n_feat_X = size(X, 2)
+    n_feat_Z = size(Z, 2)
+
+    #level 1 priors
+    α ~ Normal(mean(y), 2.5 * std(y))
+    β ~ filldist(Normal(0, 2), n_feat_X)
+    σ ~ Exponential(1)
+
+    #level 2 priors
+    τ ~ truncated(Cauchy(0, 2); lower=0) #group variance prior
+    u ~ filldist(Normal(0, τ), n_feat_Z)
+
+    ŷ = α .+ X * β .+ Z * u
+    return y ~ MvNormal(ŷ, σ^2 * I)
+end
+```
+
+Then we do our usual model definition and sampling thing:
+
+```{julia}
+mod_rand_int = rand_int(X, y, Z1)
+
+chn_rand_int = sample(mod_rand_int, NUTS(), MCMCThreads(), 1_000, 2)
+```
+
+And we can access a summary of our chains like so:
+
+```{julia}
+rand_int_summary = DataFrame(summarize(chn_rand_int));
+
+#let's check the rhats to make sure our model is ok
+extrema(rand_int_summary.:rhat)
+```
+
+And if we want to plot the distribution of our estimated intercepts:
+
+```{julia}
+d_int = Normal(rand_int_summary[1, :mean], rand_int_summary[4, :mean])
+
+plot(d_int)
+```
+
+## Random Slope 
+
+Since we parameterized our model generally using the $y = X \beta + Zu + \epsilon$ structure, we actually don't need to write a new model function to fit a random slope model -- we just need to pass in a different Z matrix. But let's rename the previous model just to reinforce this.
+
+The notation is the same as it was the previous case, except we'll have $\beta_j$ instead of $\alpha_j$, since we're allowing for random slopes instead of random intercepts.
+
+```{julia}
+@model function multilevel_mod(X, y, Z)
+    n_feat_X = size(X, 2)
+    n_feat_Z = size(Z, 2)
+
+    #level 1 priors
+    α ~ Normal(mean(y), 2.5 * std(y))
+    β ~ filldist(Normal(0, 2), n_feat_X)
+    σ ~ Exponential(1)
+
+    #level 2 priors
+    τ ~ truncated(Cauchy(0, 2); lower=0) #group variance prior
+    u ~ filldist(Normal(0, τ), n_feat_Z)
+
+    ŷ = α .+ X * β .+ Z * u
+    return y ~ MvNormal(ŷ, σ^2 * I)
+end
+
+```
+
+Then we sample:
+
+```{julia}
+mod_rand_slope = multilevel_mod(X, y, Z2)
+
+chn_rand_slope = sample(mod_rand_slope, NUTS(), MCMCThreads(), 1_000, 2)
+```
+
+In this case, our $u$ parameters are our slopes (rather than our intercepts)
+
+We can get the summary data just like before:
+
+```{julia}
+rand_slope_summary = DataFrame(summarize(chn_rand_slope))
+```
+
+And we can plot the distribution of our slopes
+
+```{julia}
+d_slope = Normal(rand_slope_summary[2, :mean], rand_slope_summary[4, :mean])
+
+plot(d_slope)
+```
+
+
+## Random-Intercept Random-Slope Model (Uncorrelated)
+
+Fitting a random-intercept random-slope model is basically the same, except we need to change the parameterization a bit so that we're not estimating one variance parameter for the intercepts and the slopes combined. One way to do this is to just pass in a Z matrix for intercepts and a Z for slopes, so our model ends up being:
+
+$y = \alpha + X \beta + Z_\alpha  u_\alpha + Z_\beta  u_\beta$
+
+But another way to do this is to pass in a single $Z$ matrix (the intercept and slope matrices combined) and, rather than $u_\alpha$ and $u_\beta$ vectors, a prior for a $u$ matrix with random effects. I'll end up doing something like this in the correlated intercept/slope model in the next subsection. But for now let's parameterize it per the equation above. 
+
+```{julia}
+@model function ri_rs_model(X, y, Z_α, Z_β)
+    n_feat_X = size(X, 2)
+    n_feat_Z_α = size(Z_α, 2)
+    n_feat_Z_β = size(Z_β, 2)
+
+    #level 1 priors
+    α ~ Normal(mean(y), 2.5 * std(y))
+    β ~ filldist(Normal(0, 2), n_feat_X)
+    σ ~ Exponential(1)
+
+    #random intercept stuff
+    τ_α ~ truncated(Cauchy(0, 2); lower=0)
+    u_α ~ filldist(Normal(0, τ_α), n_feat_Z_α)
+
+    #random slope stuff
+    τ_β ~ truncated(Cauchy(0, 2); lower=0)
+    u_β ~ filldist(Normal(0, τ_β), n_feat_Z_β)
+
+    ŷ = α .+ X * β .+ Z_α * u_α .+ Z_β * u_β
+    return y ~ MvNormal(ŷ, σ^2 * I)
+end
+```
+
+And then we can do the same sampling dance:
+
+```{julia}
+mod_ri_rs = ri_rs_model(X, y, Z1, Z2)
+
+chn_ri_rs = sample(mod_ri_rs, NUTS(), MCMCThreads(), 1_000, 2)
+```
+
+```{julia}
+ri_rs_summary = DataFrame(summarize(chn_ri_rs))
+```
+
+We can interact with this summary dataframe to get all of the estimated parameters.
+
+## Correlated Random-Intercept Random-Slope model
+
+Ok so this final model allows the random intercepts and random slopes to covary. That is, rather than being sample from separate (independent) univariate normal distributions, $\alpha$ (i.e. $\beta_0$) and $\beta$ (i.e. $\beta_1$) are going to be be sampled from a multivariate normal distribution, which allows us to specify a covariance between the parameters.
+
+Mathematically, this is something like:
+
+$y \sim Normal(X \beta_j, \sigma)$
+$\beta_j \sim MvNormal(\mu_j, \Sigma) \, for \, j \in {1, ..., J}$
+$\Sigma \sim LKJ(\eta)$
+$\sigma \sim Exponential(\sigma_y)$
+
+A few things about this:
+
+- $\beta_j$ will end up being a *p* by *k* matrix, where *p* is the number of predictors in the design matrix (include the intercept term) and *k* is the number of unique groups/subjects
+
+- The [LKJ distribution](https://en.wikipedia.org/wiki/Lewandowski-Kurowicka-Joe_distribution) is a "probability distribution over positive definite symmetric matrices with unit diagonals," which is what a correlation matrix is, so this provides us with a useful prior for our multivariate normal distribution. And the $\eta$ parameter is a scaling parameter, and my understanding is that higher values of $\eta$ make larger correlations less likely, with $\eta = 1$ being a uniform distribution.
+
+We can specify this in Turing as follows:
+
+```{julia}
+@model function corr_ri_rs_model(X, y, idx)
+    #housekeepting
+    n_feat_X = size(X, 2)
+    n_groups = length(unique(idx))
+
+    #priors
+    σ ~ Exponential(56) #56 is approximately std(y) in this case
+    Ρ ~ LKJCholesky(n_feat_X, 2) #2 is our eta parameter here
+    τ ~ filldist(truncated(Cauchy(0, 2); lower=0), n_feat_X)
+
+    #reconstructing the matrix from the choleskey decomposition
+    Σ_L = Diagonal(τ) * Ρ.L
+    Σ = PDMat(Cholesky(Σ_L + 1e-6 * I))
+
+    #this is currently assuming betas are 0, which doesn't make much sense with uncentered data, but w/e
+    β ~ filldist(MvNormal(Σ), n_groups)
+
+    #likelihood
+    return y ~ arraydist([Normal(X[i, :] ⋅ β[:, idx[i]], σ) for i in eachindex(y)])
+end
+```
+
+Some of the stuff in there that is maybe unfamiliar:
+
+- There are a couple of lines where I reconstruct the $\Sigma$ matrix using the variance priors ($\tau$) and the cholesky decomposition of the LKJ prior. I get fundamentally what this is doing, but in the spirit of transparency, I copied some of these lines from [Jose Storopoli's work](https://storopoli.io/Bayesian-Julia/pages/11_multilevel_models/#correlated-random-intercept-slope_model)
+
+- The `arraydist(...)` stuff at the end lets me write a list comprehension to get the likelihoods for each element of y (I did this in the [logistic regression notes](ch6_logistic_regression.qmd), too). I could parameterize the model to use $Z$ and $u$ matrices like the previous examples, but I think it's easier to write this version with a list comprehension/for loop, and it's (probably?) not too much slower (although this is an assumption -- I haven't actually tested it). 
+
+Once we have the model defined, we can sample it:
+
+```{julia}
+X1 = hcat(ones(size(X, 1)), X)
+
+mod_corr_ri_rs = corr_ri_rs_model(X1, y, id_ints)
+
+chn_corr_ri_rs = sample(mod_corr_ri_rs, NUTS(), MCMCThreads(), 1_000, 2)
+```
+
+And get our summary:
+
+```{julia}
+corr_ri_rs_summary = DataFrame(summarize(chn_corr_ri_rs))
+```
+
+A few things about the parameter estimates here:
+
+- The notation for the betas is going to be $\beta[j, idx]$ where j is the parameter number and idx is the group identifier. So like $\beta[1, 1]$ is going to be the intercept for the first subject, $\beta[2, 1]$ is going to be the `days` slope for the first subject, $\beta[2, 10]$ is going to be the `days` slope for the 10th subject, etc.
+
+- The $\tau$ values are going to be the standard deviations of the intercept and slope parameters.
+
+- We should be able to reconstruct our correlation matrix via my doing something like Rho.L * Rho.L'
+
+## Predicting
+
+I haven't played much with predicting data from these models, but since there's not a built-in predict method for the ordinal regression, I kind of suspect that it's not as straightforward as just calling `predict()`. (and [this post](https://discourse.julialang.org/t/turing-jl-how-to-generate-samples-observations-from-a-model/95258/4) suggests something similar), so I'm not going to predict here, but there's no reason I couldn't just follow the same logic as I did in the [ordinal regression notes](ch7_ordinal_regression.qmd) and do predictions by hand if I needed to.

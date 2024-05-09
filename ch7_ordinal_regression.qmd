@@ -1,5 +1,5 @@
 ---
-title: Bayesian Ordinal Regression"
+title: Bayesian Ordinal Regression
 jupyter: julia-1.9
 ---
 
